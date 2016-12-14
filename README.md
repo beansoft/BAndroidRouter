@@ -10,7 +10,8 @@ BAndroidRouter is an multi module enabled router library. 仿贝贝网App组件�
 
 ## 核心用法浓缩
 
-```@Router(value = {"client/module1/test"}) // 配置映射路径 public class MainActivity extends Activity {...}
+```java
+@Router(value = {"client/module1/test"}) // 配置映射路径 public class MainActivity extends Activity {...}
 
 // 使用映射路径跳转
 HRouter.open(context, "app://client/module1/test?a=b&name=张三");
@@ -29,25 +30,32 @@ router-library Android库, 实现了Activity的路由逻辑
 模块必须设置module名称:
 参考build.grale
 
-```apt {     arguments {         targetModuleName 'Other' // 模块名, 用于加载和生成映射关系
+```java
+apt {
+     arguments {
+             targetModuleName 'Other' // 模块名, 用于加载和生成映射关系
     } }
 ```
 
 在需要支持跳转的Activity类名上加注解:
 
 
-```@Router(value = {"client/module1/test"}) // 配置映射路径 public class MainActivity extends Activity {
+```java
+@Router(value = {"client/module1/test"}) // 配置映射路径 public class MainActivity extends Activity {
 ```
 
 ### 主App的设置
 ####初始化Router
 可以设置跳转支持的Schema, 以及需要加载的模块中的跳转规则类(用APT插件自动生成), 如下面代码中 Other 即为新增模块中的 targetModuleName, 
-```HRouter.setScheme("app");// 设置跳转的schema HRouter.setup("Base", "Other");
+```
+HRouter.setScheme("app");// 设置跳转的schema HRouter.setup("Base", "Other");
 ```
 #### 发起路由跳转
 跳转到模块内和模块外的Activity的方式都是统一的, 如下所示:
 
-```String path = "app://client/module1/test?a=b&name=张三"; if(!HRouter.open(this, path)) {     Toast.makeText(this, "没有跳转成功, 请检查跳转路径 " + path, Toast.LENGTH_SHORT).show(); } else {     Toast.makeText(this, "成功跳转到 " + HRouter.getActivityName(path).getCanonicalName(), Toast.LENGTH_SHORT).show(); }
+```java
+String path = "app://client/module1/test?a=b&name=张三";
+ if(!HRouter.open(this, path)) {     Toast.makeText(this, "没有跳转成功, 请检查跳转路径 " + path, Toast.LENGTH_SHORT).show(); } else {     Toast.makeText(this, "成功跳转到 " + HRouter.getActivityName(path).getCanonicalName(), Toast.LENGTH_SHORT).show(); }
 ```
 a=b&name=张三 这样的字符串会转换为Bundle信息.
 
