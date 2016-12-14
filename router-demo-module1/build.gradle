@@ -1,0 +1,53 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.neenbedankt.android-apt'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    apt project(':router-compiler')
+    compile project(':router-library')
+    compile 'com.android.support:appcompat-v7:22.2.1'
+}
+
+apt {
+    arguments {
+        targetModuleName 'Other' // 模块名, 用于加载和生成映射关系
+    }
+}
+
+
+android.libraryVariants.all { variant ->
+    variant.outputs.each { output ->
+        def outputFile = output.outputFile
+        def fileName
+        if (outputFile != null && outputFile.name.endsWith('.aar')) {
+            if (outputFile.name.contains('debug')) {
+                def name = "${rootDir}/libs/" + outputFile.name// router-demo-app
+                print "=======> " + name + "\n"
+                output.outputFile = outputFile// 保留旧的library文件
+                output.outputFile = file(name)
+            }
+
+        }
+    }
+}
