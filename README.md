@@ -42,14 +42,18 @@ apt {
 
 
 ```java
-@Router(value = {"client/module1/test"}) // 配置映射路径 public class MainActivity extends Activity {
+@Router(value = {"client/module1/test"}) 
+ public class MainActivity extends Activity {
+//...
+}
 ```
 
 ### 主App的设置
 ####初始化Router
 可以设置跳转支持的Schema, 以及需要加载的模块中的跳转规则类(用APT插件自动生成), 如下面代码中 Other 即为新增模块中的 targetModuleName, 
 ```
-HRouter.setScheme("app");// 设置跳转的schema HRouter.setup("Base", "Other");
+HRouter.setScheme("app");// 设置跳转的schema 
+HRouter.setup("Base", "Other");// 载入映射关系
 ```
 #### 发起路由跳转
 跳转到模块内和模块外的Activity的方式都是统一的, 如下所示:
