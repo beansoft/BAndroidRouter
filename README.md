@@ -20,21 +20,22 @@ HRouter.open(context, "app://client/module1/test?a=b&name=张三");
 
 
 ## 代码结构
-router-demo-app 主演示入口App
-router-demo-module1 主演示模块, 仅依赖模块router-compiler和 router-library
-router-annotation @Router 路由Java注解(Java库)
-router-compiler APT插件库(Java库),用于根据注解自动生成单个模块下所有Activity的映射关系类
+router-demo-app 主演示入口App<br>
+router-demo-module1 主演示模块, 仅依赖模块router-compiler和 router-library<br>
+router-annotation @Router 路由Java注解(Java库)<br>
+router-compiler APT插件库(Java库),用于根据注解自动生成单个模块下所有Activity的映射关系类<br>
 router-library Android库, 实现了Activity的路由逻辑
 ## 如何增加和使用路由关系
 ### 子组件(模块)的开发和设置
 模块必须设置module名称:
-参考build.grale
+参考build.gradle
 
-```java
+```gradle
 apt {
      arguments {
              targetModuleName 'Other' // 模块名, 用于加载和生成映射关系
-    } }
+    } 
+}
 ```
 
 在需要支持跳转的Activity类名上加注解:
@@ -55,7 +56,11 @@ HRouter.setScheme("app");// 设置跳转的schema HRouter.setup("Base", "Other
 
 ```java
 String path = "app://client/module1/test?a=b&name=张三";
- if(!HRouter.open(this, path)) {     Toast.makeText(this, "没有跳转成功, 请检查跳转路径 " + path, Toast.LENGTH_SHORT).show(); } else {     Toast.makeText(this, "成功跳转到 " + HRouter.getActivityName(path).getCanonicalName(), Toast.LENGTH_SHORT).show(); }
+if(!HRouter.open(this, path)) {
+    Toast.makeText(this, "没有跳转成功, 请检查跳转路径 " + path, Toast.LENGTH_SHORT).show();
+} else {
+    Toast.makeText(this, "成功跳转到 " + HRouter.getActivityName(path).getCanonicalName(), Toast.LENGTH_SHORT).show();
+}
 ```
 a=b&name=张三 这样的字符串会转换为Bundle信息.
 
