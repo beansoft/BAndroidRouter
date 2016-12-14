@@ -13,7 +13,11 @@ BAndroidRouter is an multi module enabled router library. 仿贝贝网App组件�
 ## 核心用法浓缩
 
 ```java
-@Router(value = {"client/module1/test"}) // 配置映射路径 public class MainActivity extends Activity {...}
+@Router(value = {"client/module1/test"})
+ // 配置映射路径 
+public class MainActivity extends Activity {
+// ...
+}
 
 // 使用映射路径跳转
 HRouter.open(context, "app://client/module1/test?a=b&name=张三");
