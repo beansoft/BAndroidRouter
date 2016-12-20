@@ -7,7 +7,7 @@ import android.widget.TextView;
 import com.github.beansoftapp.android.router.annotation.Router;
 import com.github.beansoftapp.android.router.util.BundleUtil;
 
-@Router(value = {"client/aa2", "client/bb", "client/my/test"})
+@Router(value = {"client/a", "client/b", "client/my/test"})
 public class TestActivity extends Activity {
 
     @Override

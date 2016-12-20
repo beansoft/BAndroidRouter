@@ -10,11 +10,13 @@ import android.util.Log;
 
 import com.github.beansoftapp.android.router.action.HAction;
 import com.github.beansoftapp.android.router.action.HActionMapping;
+import com.github.beansoftapp.android.router.action.HCallback;
 import com.github.beansoftapp.android.router.interceptor.LoginInterceptor;
 import com.github.beansoftapp.android.router.util.DeviceHelper;
 
 import java.util.*;
 
+import static android.R.attr.action;
 import static android.content.pm.PackageManager.MATCH_DEFAULT_ONLY;
 
 /**
@@ -70,7 +72,6 @@ public class HRouter {
         }
     }
 
-    // TODO 此方法暂未用到
     private static void initActionMappings() {
         long currentTimeMillis = System.currentTimeMillis();
         if (actionMappings.isEmpty() && mBundlesName != null) {
@@ -78,8 +79,8 @@ public class HRouter {
                 try {
                     Class.forName("com.github.beansoftapp.android.router.HRouterMapping" + str).getMethod("mapAction", new Class[0]).invoke(null, new Object[0]);
                 } catch (Throwable e) {
-//                    e.printStackTrace();
-//                    Log.e(TAG, "Cannt fond com.github.beansoftapp.android.router.HRouterMapping" + str, e);
+                    e.printStackTrace();
+                    Log.e(TAG, "Cannt fond com.github.beansoftapp.android.router.HRouterMapping" + str, e);
                 }
             }
             Log.d(TAG, "Routers HAction cost " + (System.currentTimeMillis() - currentTimeMillis) + "ms");
@@ -137,7 +138,6 @@ public class HRouter {
 
     /**
      * 执行 HAction 动作
-     * TODO 相关功能暂未实现
      * @param str
      * @return
      */
@@ -156,6 +156,28 @@ public class HRouter {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    /**
+     * 执行 HAction 动作
+     * @param str
+     * @param callback, 带泛型的方法
+     * @return
+     */
+    public static <T> void action(String str, HCallback<T> callback) {
+        try {
+            initActionMappings();
+            Uri parse = Uri.parse(str);
+            HPath create = HPath.create(parse);
+            for (HActionMapping hBActionMapping : actionMappings) {
+                if (hBActionMapping.match(create)) {
+                    Log.i(TAG, "Hit HBAction命中路由表: " + hBActionMapping.toString());
+                    (hBActionMapping.getAction().newInstance()).handleParams(hBActionMapping.parseExtras(parse), callback);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -7,6 +7,13 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.github.beansoftapp.android.router.HRouter;
+import com.github.beansoftapp.android.router.action.HAbstractCallback;
+import com.github.beansoftapp.android.router.action.HCallback;
+
+import java.net.HttpCookie;
+import java.util.List;
+
+import static android.R.attr.path;
 
 
 public class MainActivity extends Activity {
@@ -17,6 +24,34 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         HRouter.setScheme("app");// 设置跳转的schema
         HRouter.setup("Base", "Other");
+
+        Object value = HRouter.action("haction://action/test");
+        Toast.makeText(this, "Action执行结果:" + value, Toast.LENGTH_SHORT).show();
+
+        value = HRouter.action("haction://action/test?a=b");
+        Toast.makeText(this, "Action带参数执行结果:" + value, Toast.LENGTH_SHORT).show();
+
+        HRouter.action("haction://action/test?a=b", new HAbstractCallback<String>() {
+            @Override
+            public void start() {
+
+            }
+
+            @Override
+            public void complete() {
+
+            }
+
+            @Override
+            public void failure(Throwable exception) {
+
+            }
+
+            @Override
+            public void ok(String o, Object response) {
+
+            }
+        });
     }
 
     public void testRouterApp(View view) {

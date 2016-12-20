@@ -8,7 +8,6 @@ import java.util.Map;
 
 /**
  * 动作映射, 不支持 Native 跳转.
- * TODO 此类暂未使用
  */
 public class HActionMapping {
     private Class<? extends HAction> action;
