@@ -34,22 +34,17 @@ public class MainActivity extends Activity {
         HRouter.action("haction://action/test?a=b", new HAbstractCallback<String>() {
             @Override
             public void start() {
-
+                Toast.makeText(MainActivity.this, "Action执行开始", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void complete() {
-
-            }
-
-            @Override
-            public void failure(Throwable exception) {
-
+                Toast.makeText(MainActivity.this, "Action执行结束", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void ok(String o, Object response) {
-
+                System.out.println("异步调用结束!");
             }
         });
     }

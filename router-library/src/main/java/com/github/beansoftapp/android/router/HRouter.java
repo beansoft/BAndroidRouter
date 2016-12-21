@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.github.beansoftapp.android.router.action.HActionExecutor;
 import com.github.beansoftapp.android.router.action.HAction;
 import com.github.beansoftapp.android.router.action.HActionMapping;
 import com.github.beansoftapp.android.router.action.HCallback;
@@ -16,7 +17,7 @@ import com.github.beansoftapp.android.router.util.DeviceHelper;
 
 import java.util.*;
 
-import static android.R.attr.action;
+import static android.R.attr.key;
 import static android.content.pm.PackageManager.MATCH_DEFAULT_ONLY;
 
 /**
@@ -28,7 +29,7 @@ import static android.content.pm.PackageManager.MATCH_DEFAULT_ONLY;
 public class HRouter {
     private static final String TAG = "HRouter";
     public static final String TARGET = "router_target";
-    public static String URL_SCHEME = "router";
+    public static String URL_SCHEME = "router";// 协议头
     private static List<HActionMapping> actionMappings = new ArrayList();
     private static String[] mBundlesName;
     private static List<HMapping> mappings = new ArrayList();
@@ -54,9 +55,9 @@ public class HRouter {
     private static void initNameMappings() {
         if (nameMappings.isEmpty()) {
             initMappings();
-            for (HMapping hBMapping : mappings) {
-                String name = hBMapping.getActivity().getName();
-                String format = hBMapping.getFormat();
+            for (HMapping hMapping : mappings) {
+                String name = hMapping.getActivity().getName();
+                String format = hMapping.getFormat();
                 if (format != null) {
                     List list = (List) nameMappings.get(name);
                     if (list == null || list.size() == 0) {
@@ -146,10 +147,10 @@ public class HRouter {
             initActionMappings();
             Uri parse = Uri.parse(str);
             HPath create = HPath.create(parse);
-            for (HActionMapping hBActionMapping : actionMappings) {
-                if (hBActionMapping.match(create)) {
-                    Log.i(TAG, "Hit HBAction命中路由表: " + hBActionMapping.toString());
-                    return (hBActionMapping.getAction().newInstance()).handleParams(hBActionMapping.parseExtras(parse), null);
+            for (HActionMapping hActionMapping : actionMappings) {
+                if (hActionMapping.match(create)) {
+                    Log.i(TAG, "Hit HAction命中路由表: " + hActionMapping.toString());
+                    return HActionExecutor.handleParams(hActionMapping.getAction().newInstance(), hActionMapping.parseExtras(parse), null );
                 }
             }
             return null;
@@ -170,10 +171,10 @@ public class HRouter {
             initActionMappings();
             Uri parse = Uri.parse(str);
             HPath create = HPath.create(parse);
-            for (HActionMapping hBActionMapping : actionMappings) {
-                if (hBActionMapping.match(create)) {
-                    Log.i(TAG, "Hit HBAction命中路由表: " + hBActionMapping.toString());
-                    (hBActionMapping.getAction().newInstance()).handleParams(hBActionMapping.parseExtras(parse), callback);
+            for (HActionMapping hActionMapping : actionMappings) {
+                if (hActionMapping.match(create)) {
+                    Log.i(TAG, "Hit HAction命中路由表: " + hActionMapping.toString());
+                    HActionExecutor.handleParams(hActionMapping.getAction().newInstance(), hActionMapping.parseExtras(parse), callback );
                 }
             }
         } catch (Exception e) {
@@ -213,14 +214,14 @@ public class HRouter {
             if (checkOpenApp(context, create)) {
                 return true;
             }
-            for (HMapping hBMapping : mappings) {
-                if (hBMapping.match(create)) {
+            for (HMapping hMapping : mappings) {
+                if (hMapping.match(create)) {
                     Bundle pareseBundle;
-                    Log.i(TAG, "Hit 命中路由表: " + hBMapping.toString());
-                    Bundle parseExtras = hBMapping.parseExtras(create.getUri());
-                    parseExtras.putString(TARGET, hBMapping.getFormat());
+                    Log.i(TAG, "Hit 命中路由表: " + hMapping.toString());
+                    Bundle parseExtras = hMapping.parseExtras(create.getUri());
+                    parseExtras.putString(TARGET, hMapping.getFormat());
                     if (bundle != null) {
-                        pareseBundle = hBMapping.pareseBundle(bundle);
+                        pareseBundle = hMapping.pareseBundle(bundle);
                         pareseBundle.putAll(parseExtras);
                     } else {
                         pareseBundle = parseExtras;
@@ -228,11 +229,11 @@ public class HRouter {
                     if (!checkVersion(context, pareseBundle.getString("ver", BuildConfig.VERSION_NAME))) {
                         return true;
                     }
-                    if (TextUtils.isEmpty(hBMapping.getPreExecute())) {
-                        new LoginInterceptor(context, hBMapping.isNeedLogin()).openTarget(hBMapping.getActivity(), pareseBundle);
+                    if (TextUtils.isEmpty(hMapping.getPreExecute())) {
+                        new LoginInterceptor(context, hMapping.isNeedLogin()).openTarget(hMapping.getActivity(), pareseBundle);
                         return true;
                     }
-                    action(hBMapping.getPreExecute());
+                    action(hMapping.getPreExecute());
                     return false;
                 }
             }
@@ -247,19 +248,19 @@ public class HRouter {
      * 检查 App 是否已经运行, 如果没有载入完毕则返回, 否则先启动App的默认View入口:
      * <action android:name="android.intent.action.VIEW"/>
      * @param context
-     * @param hBPath
+     * @param hPath
      * @return
      */
-    private static boolean checkOpenApp(Context context, HPath hBPath) {
+    private static boolean checkOpenApp(Context context, HPath hPath) {
         try {
-            String uri = hBPath.getUri().toString();
+            String uri = hPath.getUri().toString();
             if (TextUtils.isEmpty(uri) || uri.startsWith(URL_SCHEME) || uri.startsWith("http") ||
                     uri.startsWith("https") || uri.startsWith("about")) {
                 return false;
             }
             Intent intent = new Intent("android.intent.action.VIEW");
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setData(hBPath.getUri());
+            intent.setData(hPath.getUri());
             if (context.getPackageManager().resolveActivity(intent, MATCH_DEFAULT_ONLY) == null) {
                 return false;
             }
@@ -280,6 +281,11 @@ public class HRouter {
         return false;
     }
 
+    /**
+     * 获取目标类所对应的路径列表.
+     * @param obj
+     * @return
+     */
     public static List<String> getTarget(Object obj) {
         try {
             initNameMappings();
@@ -297,23 +303,23 @@ public class HRouter {
      */
     public static Class<?> getActivityName(String str) {
         HPath create = HPath.create(Uri.parse(str));
-        for (HMapping hBMapping : mappings) {
-            if (hBMapping.match(create)) {
-                return hBMapping.getActivity();
+        for (HMapping hMapping : mappings) {
+            if (hMapping.match(create)) {
+                return hMapping.getActivity();
             }
         }
         return null;
     }
 
 
-    public static String getString(Bundle bundle, String str, String str2) {
+    public static String getString(Bundle bundle, String key, String defaultValue) {
         if (bundle == null) {
-            return str2;
+            return defaultValue;
         }
-        Object obj = bundle.get(str);
+        Object obj = bundle.get(key);
         if (obj != null) {
             return obj + BuildConfig.VERSION_NAME;
         }
-        return str2;
+        return defaultValue;
     }
 }

@@ -4,7 +4,8 @@ BAndroidRouter is an multi module enabled router library. 仿贝贝网App组件�
 作者: 刘长炯 BeanSoft@126.com (微信号 weblogic ).
 
 借鉴贝贝技术团队微信公众号的一篇文章 "贝贝的组件化之路" , 本代码库
-基于apt技术，通过注解方式实现了文章中所说的AAR组件化和跳转总线(Router), 支持通过URL打开Activity功能.
+基于apt技术，通过注解方式实现了AAR组件化和跳转总线(Router), 支持通过URL打开Activity功能,
+支持基于URL的App数据交互协议.
 
 文章详情请自行搜索.
 
@@ -22,6 +23,52 @@ public class MainActivity extends Activity {
 // 使用映射路径跳转
 HRouter.open(context, "app://client/module1/test?a=b&name=张三");
 
+// 开发和配置动作映射
+@Action(value = {"action/test"})
+public class TestAction extends HAbstractAction<String>  {
+        // 同步模式
+        public String action() {// 无参数的调用应该只考虑这一个
+            return "TestAction同步调用无参数";
+        }
+
+        // 同步模式+参数
+        public String action(Object param) {
+            return "TestAction同步调用有参数:" + param;
+        }
+
+        // 异步模式+回调
+        public void action(HCallback<String> callback) {
+            action(null, callback);
+        }
+
+        // 异步模式+回调+参数
+        public void action(Object param, HCallback<String> callback) {
+            callback.start();
+            callback.ok(action(param), null);
+            callback.complete();
+        }
+}
+
+// 使用HRouter来调用动作
+        Object value = HRouter.action("haction://action/test?a=b");
+        Toast.makeText(this, "Action带参数执行结果:" + value, Toast.LENGTH_SHORT).show();
+
+        HRouter.action("haction://action/test?a=b", new HAbstractCallback<String>() {
+            @Override
+            public void start() {
+                Toast.makeText(MainActivity.this, "Action执行开始", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void complete() {
+                Toast.makeText(MainActivity.this, "Action执行结束", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void ok(String o, Object response) {
+                System.out.println("异步调用结束!");
+            }
+        });
 ```
 
 
@@ -77,12 +124,13 @@ a=b&name=张三 这样的字符串会转换为Bundle信息.
 ### 组件化
 由于跳转关系不需要关注具体的类, 所以主App可以只是一个壳工程, 依赖一堆子模块aar, 甚至每个子模块都可以有自己的版本库, 即可happy的跳转了.
 
-## 待完成功能(局限性)
 ###跨模块的数据传递
- 目前尚在开发之中, 近期即可支持, 届时即可通过:
-数据获取：`Object  o = HAction.open(this, “app://bb/base/product?name=zs”);`
-的方式同步或异步获取数据. 敬请关注!
+一个Action可以实现HAction接口, 并加入@Action注解后, 就可以通过路径的方式进行跨模块的调用.
+TODO 文档完善
+
+## 待完成功能(TODO)
 ### WebView和外部浏览器的支持
+### 多个参数值的支持, MultiValueMap的调研
 目前尚在开发之中
 
 

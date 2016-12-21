@@ -21,19 +21,19 @@ public class HPath {
 
     /**
      * 比较两个Path是否匹配
-     * @param hBPath
+     * @param hPath
      * @param anotherPath
      * @return
      */
-    public static boolean match(HPath hBPath, HPath anotherPath) {
-        if (hBPath.length() != anotherPath.length()) {
+    public static boolean match(HPath hPath, HPath anotherPath) {
+        if (hPath.length() != anotherPath.length()) {
             return false;
         }
-        while (hBPath != null) {
-            if (!hBPath.match(anotherPath)) {
+        while (hPath != null) {
+            if (!hPath.match(anotherPath)) {
                 return false;
             }
-            hBPath = hBPath.next;
+            hPath = hPath.next;
             anotherPath = anotherPath.next;
         }
         return true;
@@ -93,8 +93,8 @@ public class HPath {
         return i;
     }
 
-    private boolean match(HPath hBPath) {
-        return isArgument() || this.value.equals(hBPath.value);
+    private boolean match(HPath hPath) {
+        return isArgument() || this.value.equals(hPath.value);
     }
 
     /**

@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 /**
  * @Router(value = {"path1", "path2", "a/b/c"})
  * 最终生成的代码:
- * HBRouterMapping模块名
+ * HRouterMapping模块名
  *
 public class HRouterMappingBase {
 public static final void map() {

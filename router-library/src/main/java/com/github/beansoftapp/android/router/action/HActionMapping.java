@@ -63,8 +63,8 @@ public class HActionMapping {
         return HPath.match(this.formatPath.next(), hPath.next());
     }
 
-    public Map<String, Object> parseExtras(Uri uri) {
-        Map<String, Object> hashMap = new HashMap();
+    public Map<String, String> parseExtras(Uri uri) {
+        Map<String, String> hashMap = new HashMap();
         HPath next = this.formatPath.next();
         HPath nextPath = HPath.create(uri).next();
         while (next != null) {

@@ -9,5 +9,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 // 此类暂时未用
 public @interface Mapping {
-    String name() default "HBRouterMapping";
+    String name() default "HRouterMapping";
 }

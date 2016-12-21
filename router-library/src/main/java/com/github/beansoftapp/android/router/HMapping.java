@@ -90,11 +90,11 @@ public class HMapping {
         return this.format.hashCode();
     }
 
-    public boolean match(HPath hBPath) {
+    public boolean match(HPath hPath) {
         if (this.formatPath.isHttp()) {
-            return HPath.match(this.formatPath, hBPath);
+            return HPath.match(this.formatPath, hPath);
         }
-        return HPath.match(this.formatPath.next(), hBPath.next());
+        return HPath.match(this.formatPath.next(), hPath.next());
     }
 
     public Bundle parseExtras(Uri uri) {
