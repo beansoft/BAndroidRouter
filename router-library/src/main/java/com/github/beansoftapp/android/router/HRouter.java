@@ -8,16 +8,22 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.github.beansoftapp.android.router.action.HActionExecutor;
 import com.github.beansoftapp.android.router.action.HAction;
+import com.github.beansoftapp.android.router.action.HActionExecutor;
 import com.github.beansoftapp.android.router.action.HActionMapping;
 import com.github.beansoftapp.android.router.action.HCallback;
-import com.github.beansoftapp.android.router.interceptor.LoginInterceptor;
+import com.github.beansoftapp.android.router.interceptor.AbstractInterceptor;
+import com.github.beansoftapp.android.router.interceptor.DefaultLoginInterceptor;
+import com.github.beansoftapp.android.router.util.BuildConfig;
 import com.github.beansoftapp.android.router.util.DeviceHelper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static android.R.attr.key;
 import static android.content.pm.PackageManager.MATCH_DEFAULT_ONLY;
 
 /**
@@ -34,7 +40,15 @@ public class HRouter {
     private static String[] mBundlesName;
     private static List<HMapping> mappings = new ArrayList();
     private static Map<String, List<String>> nameMappings = new HashMap();
+    private static AbstractInterceptor loginInterceptor;// 登陆拦截器
 
+    /**
+     * 设置自定义的登陆拦截器.
+     * @param loginInterceptor
+     */
+    public static void setLoginInterceptor(AbstractInterceptor loginInterceptor) {
+        HRouter.loginInterceptor = loginInterceptor;
+    }
 
     public static synchronized void setup(String... strArr) {
         synchronized (HRouter.class) {
@@ -230,7 +244,13 @@ public class HRouter {
                         return true;
                     }
                     if (TextUtils.isEmpty(hMapping.getPreExecute())) {
-                        new LoginInterceptor(context, hMapping.isNeedLogin()).openTarget(hMapping.getActivity(), pareseBundle);
+
+                        AbstractInterceptor interceptor = loginInterceptor;
+                        if(loginInterceptor == null) {
+                            interceptor = new DefaultLoginInterceptor(context);
+                        }
+                        interceptor.setNeedLogin(hMapping.isNeedLogin());
+                        interceptor.openTarget(hMapping.getActivity(), pareseBundle);
                         return true;
                     }
                     action(hMapping.getPreExecute());

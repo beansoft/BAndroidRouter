@@ -25,7 +25,7 @@ com.github.beansoftapp.android.router.HRouter.map("client/my/test",  TestActivit
 public @interface Router {
     boolean isPublic() default true;
 
-    boolean login() default false;
+    boolean login() default false;// 是否需要登录验证
 
     String[] value();
 

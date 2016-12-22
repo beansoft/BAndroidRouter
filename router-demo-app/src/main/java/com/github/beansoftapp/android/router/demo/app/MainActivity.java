@@ -1,19 +1,12 @@
 package com.github.beansoftapp.android.router.demo.app;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import com.github.beansoftapp.android.router.HRouter;
 import com.github.beansoftapp.android.router.action.HAbstractCallback;
-import com.github.beansoftapp.android.router.action.HCallback;
-
-import java.net.HttpCookie;
-import java.util.List;
-
-import static android.R.attr.path;
 
 
 public class MainActivity extends Activity {
@@ -24,6 +17,9 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         HRouter.setScheme("app");// 设置跳转的schema
         HRouter.setup("Base", "Other");
+        HRouter.setLoginInterceptor(new DemoLoginInterceptor(getApplicationContext()));
+
+        HRouter.action("haction://IMLogoutAction");
 
         Object value = HRouter.action("haction://action/test");
         Toast.makeText(this, "Action执行结果:" + value, Toast.LENGTH_SHORT).show();

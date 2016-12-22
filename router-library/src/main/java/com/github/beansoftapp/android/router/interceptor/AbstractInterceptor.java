@@ -7,11 +7,25 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 public abstract class AbstractInterceptor implements Interceptor {
-    private Context context;
+    protected Context context;
+    protected boolean needLogin;
 
+    /**
+     * 获取登录的具体Activity名称.
+     * @return
+     */
     public abstract Class<?> getBridgeClass();
 
+    /**
+     * 是否需要登录
+     * @return 返回 false 时需要登陆.
+     */
     public abstract boolean login();
+
+    /** 设置登录状态 */
+    public void setNeedLogin(boolean needLogin) {
+        this.needLogin = needLogin;
+    }
 
     public AbstractInterceptor(Context context) {
         this.context = context;
@@ -38,7 +52,7 @@ public abstract class AbstractInterceptor implements Interceptor {
             throw new RuntimeException("Target Activity is Null, Please Contact Business Ower");
         }
         JumpInvoker jumpInvoker = new JumpInvoker(name, bundle);
-        if (login() || intent == null) {
+        if (login() || intent == null) {// 登录页面为空时也不能进行跳转
             jumpInvoker.invoke(this.context);
             return;
         }
