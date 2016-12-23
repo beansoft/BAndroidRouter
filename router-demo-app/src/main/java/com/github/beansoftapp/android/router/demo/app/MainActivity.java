@@ -24,6 +24,9 @@ public class MainActivity extends Activity {
         Object value = HRouter.action("haction://action/test");
         Toast.makeText(this, "Action执行结果:" + value, Toast.LENGTH_SHORT).show();
 
+        value = HRouter.action("haction://action/test", "参数直接传递,例如JSON");
+        Toast.makeText(this, "Action执行结果:" + value, Toast.LENGTH_SHORT).show();
+
         value = HRouter.action("haction://action/test?a=b");
         Toast.makeText(this, "Action带参数执行结果:" + value, Toast.LENGTH_SHORT).show();
 

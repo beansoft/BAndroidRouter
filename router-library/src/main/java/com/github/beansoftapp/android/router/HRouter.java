@@ -177,7 +177,7 @@ public class HRouter {
     /**
      * 执行 HAction 动作
      * @param str
-     * @param callback, 带泛型的方法
+     * @param callback, 带泛型的回调方法
      * @return
      */
     public static <T> void action(String str, HCallback<T> callback) {
@@ -189,6 +189,52 @@ public class HRouter {
                 if (hActionMapping.match(create)) {
                     Log.i(TAG, "Hit HAction命中路由表: " + hActionMapping.toString());
                     HActionExecutor.handleParams(hActionMapping.getAction().newInstance(), hActionMapping.parseExtras(parse), callback );
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 执行 HAction 动作, 使用自定义的参数对象.
+     * @param str action 路径
+     * @param param 对象参数
+     * @return
+     */
+    public static Object action(String str, Object param) {
+        try {
+            initActionMappings();
+            Uri parse = Uri.parse(str);
+            HPath create = HPath.create(parse);
+            for (HActionMapping hActionMapping : actionMappings) {
+                if (hActionMapping.match(create)) {
+                    Log.i(TAG, "Hit HAction命中路由表: " + hActionMapping.toString());
+                    return HActionExecutor.handleParams(hActionMapping.getAction().newInstance(), param, null );
+                }
+            }
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 执行 HAction 动作, 使用自定义的参数对象.
+     * @param str
+     * @param callback, 带泛型的回调方法
+     * @return
+     */
+    public static <T> void action(String str, Object param, HCallback<T> callback) {
+        try {
+            initActionMappings();
+            Uri parse = Uri.parse(str);
+            HPath create = HPath.create(parse);
+            for (HActionMapping hActionMapping : actionMappings) {
+                if (hActionMapping.match(create)) {
+                    Log.i(TAG, "Hit HAction命中路由表: " + hActionMapping.toString());
+                    HActionExecutor.handleParams(hActionMapping.getAction().newInstance(), param, callback );
                 }
             }
         } catch (Exception e) {
