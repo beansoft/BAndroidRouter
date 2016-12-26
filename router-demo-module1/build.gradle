@@ -26,6 +26,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     apt project(':router-compiler')
     compile project(':router-library')
+    provided project(':router-annotation')// 最终项目中不出现Annotation, 增加安全性
     compile 'com.android.support:appcompat-v7:22.2.1'
 }
 

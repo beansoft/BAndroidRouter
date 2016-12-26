@@ -5,7 +5,7 @@ BAndroidRouter is an multi module enabled router library. 仿贝贝网App组件�
 
 借鉴贝贝技术团队微信公众号的一篇文章 "贝贝的组件化之路" , 本代码库
 基于apt技术，通过注解方式实现了AAR组件化和跳转总线(Router), 支持通过URL打开Activity功能,
-支持基于URL的App数据交互协议.
+支持基于URL的App数据交互协议. 还能通过避免在最终App类中出现相关注解, 一定程度上保护了代码的安全.
 
 文章详情请自行搜索.
 
@@ -129,7 +129,8 @@ a=b&name=张三 这样的字符串会转换为Bundle信息.
 TODO 文档完善
 
 ### 产生映射和Action的列表文档
-build之后, 会自动产生一个doc目录, 下面分模块会生成不同的映射文件列表, 便于研发人员对比
+build之后, 会自动产生一个doc目录, 下面分模块会生成不同的映射文件列表,
+便于研发人员查看, 在Android Stuido中点击Rebuild会更新生成.
 
 ## 待完成功能(TODO)
 ### WebView和外部浏览器的支持

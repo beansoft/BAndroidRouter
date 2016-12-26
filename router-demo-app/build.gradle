@@ -35,15 +35,13 @@ dependencies {
     compile project(':router-demo-module2')
     compile project(':router-library')
 
-    compile project(':router-annotation')
+    provided project(':router-annotation')// 最终项目中不出现Annotation, 增加安全性
     apt project(':router-compiler') // 项目式依赖
+    // 以下方式为导入时的文件式依赖
 //    apt files('./libs/router-compiler.jar')
+//    provided files('./libs/router-annotation')
 //    provided 'com.google.auto.service:auto-service:1.0-rc2'
 //    provided 'com.squareup:javapoet:1.7.0'
-    
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.android.support:appcompat-v7:22.2.1'
-
 }
 
 apt {

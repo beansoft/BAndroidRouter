@@ -16,6 +16,4 @@ dependencies {
 
 //    compile group: 'com.google.android', name: 'android', version: '4.1.1.4'
     compile 'com.google.android:android:4.1.1.4'
-
-    compile project(':router-annotation')
 }
