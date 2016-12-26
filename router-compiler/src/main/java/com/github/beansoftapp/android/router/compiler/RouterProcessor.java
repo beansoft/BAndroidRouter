@@ -1,17 +1,15 @@
 package com.github.beansoftapp.android.router.compiler;
 
 import com.github.beansoftapp.android.router.annotation.Action;
-import com.google.auto.service.AutoService;
 import com.github.beansoftapp.android.router.annotation.Router;
+import com.google.auto.service.AutoService;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,6 +19,8 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedOptions;
+import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
@@ -31,10 +31,15 @@ import javax.tools.Diagnostic;
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({"com.github.beansoftapp.android.router.annotation.Router",
         "com.github.beansoftapp.android.router.annotation.Action"})
+@SupportedOptions({"targetModuleName"})
+@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class RouterProcessor extends AbstractProcessor {
     private String targetModuleName = "";// 目标模块名
 
-    // 此代码可以用Annotation @SupportedAnnotationTypes 来简化
+    private StringBuilder routerMappings = new StringBuilder();
+    private StringBuilder actionMappings = new StringBuilder();
+
+    // 此方法的代码可以用Annotation @SupportedAnnotationTypes 来简化
 //    @Override
 //    public Set<String> getSupportedAnnotationTypes() {
 //        HashSet<String> annotationTypes = new HashSet<String>();
@@ -42,6 +47,10 @@ public class RouterProcessor extends AbstractProcessor {
 //        annotationTypes.add(Action.class.getCanonicalName());
 //        return annotationTypes;
 //    }
+
+    public RouterProcessor() {
+        System.out.println(" ****** RouterProcessor 创建 ");// 只会构造一次.
+    }
 
     @Override
     /**
@@ -64,7 +73,48 @@ public class RouterProcessor extends AbstractProcessor {
      * @return whether or not the set of annotation types are claimed by this processor
      */
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        System.out.println(" 处理 handle RouterProcessor 数量: "+annotations.size());
+        System.out.println(" ****** 处理 handle RouterProcessor 数量: "+annotations.size());
+        System.out.println(" ****** 当前路径:  " + new File(".").getAbsolutePath());
+        // 每个模块都会处理结束一次
+        System.out.println(" ****** RouterProcessor 处理结束 " + roundEnv.processingOver());
+
+        if(targetModuleName.length() == 0) {
+            throw new RuntimeException("targetModuleName为空");
+        }
+
+        if(roundEnv.processingOver()) {
+            System.out.println(" ****** actionMappings: " + actionMappings);
+            System.out.println(" ****** routerMappings: " + routerMappings);
+            if(!new File("./doc").exists()) {
+                new File("./doc").mkdir();
+            }
+
+            if(actionMappings.length() > 0) {
+                try {
+                    FileWriter fileWriter = new FileWriter("./doc/" + targetModuleName + "_actions.txt");
+                    fileWriter.write(actionMappings.toString());
+                    fileWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                new File("./doc/" + targetModuleName + "_actions.txt").delete();
+            }
+
+            if(routerMappings.length() > 0) {
+                try {
+                    FileWriter fileWriter = new FileWriter("./doc/" + targetModuleName + "_routers.txt");
+                    fileWriter.write(routerMappings.toString());
+                    fileWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                new File("./doc/" + targetModuleName + "_routers.txt").delete();
+            }
+        }
+
+
         if (annotations.size() == 0) {
             return false;
         }
@@ -98,10 +148,13 @@ public class RouterProcessor extends AbstractProcessor {
             if(routerActivity != null) {
                 String[] values = routerActivity.value();
                 if(values != null) {
+                    routerMappings.append(typeElement.asType()).append(" <--- ");
                     for(String value : values) {
                         mapMethodBuild.addCode("com.github.beansoftapp.android.router.HRouter.map($S,  $T.class, $L, $S, $L, \"\", \"\");\n",
                                 value, typeElement.asType(), routerActivity.login(), "1.0", routerActivity.isPublic() );
+                        routerMappings.append(value);
                     }
+                    routerMappings.append("\n");
                 }
             }
         }
@@ -124,18 +177,20 @@ public class RouterProcessor extends AbstractProcessor {
             // TODO 检查路由路径重复问题, 编译时报错
             if(actionClass != null) {
                 String[] values = actionClass.value();
-                if(values != null) {
-                    for(String value : values) {
+
+                if (values != null) {
+                    actionMappings.append(typeElement.asType()).append(" <--- ");
+                    for (String value : values) {
                         mapActionMethodBuild.addCode("com.github.beansoftapp.android.router.HRouter.mapAction($S,  $T.class);\n",
                                 value, typeElement.asType());
+                        actionMappings.append(value);
                     }
+                    actionMappings.append("\n");
                 }
             }
         }
 
         typeSpec.addMethod(mapActionMethodBuild.build());
-
-
 
         JavaFile javaFile = JavaFile.builder("com.github.beansoftapp.android.router", typeSpec.build()).build();
         try {
@@ -163,8 +218,4 @@ public class RouterProcessor extends AbstractProcessor {
         }
     }
 
-    @Override
-    public SourceVersion getSupportedSourceVersion() {
-        return SourceVersion.RELEASE_7;
-    }
 }

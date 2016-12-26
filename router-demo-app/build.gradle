@@ -32,19 +32,22 @@ dependencies {
 
 //    compile (name: 'router-demo-module1-debug', ext: 'aar')// 此代码从主libs下面获取module编译生成的aar
     compile project(':router-demo-module1')
+    compile project(':router-demo-module2')
     compile project(':router-library')
 
     compile project(':router-annotation')
-//    apt project(':router-compiler') // 项目式依赖
-    apt files('./libs/router-compiler.jar')
+    apt project(':router-compiler') // 项目式依赖
+//    apt files('./libs/router-compiler.jar')
+//    provided 'com.google.auto.service:auto-service:1.0-rc2'
+//    provided 'com.squareup:javapoet:1.7.0'
+    
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.android.support:appcompat-v7:22.2.1'
-    provided 'com.google.auto.service:auto-service:1.0-rc2'
-    provided 'com.squareup:javapoet:1.7.0'
+
 }
 
-//apt {
-//    arguments {
-//        targetModuleName 'Base'
-//    }
-//}
+apt {
+    arguments {
+        targetModuleName 'Base'
+    }
+}

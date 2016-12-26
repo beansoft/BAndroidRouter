@@ -128,6 +128,9 @@ a=b&name=张三 这样的字符串会转换为Bundle信息.
 一个Action可以实现HAction接口, 并加入@Action注解后, 就可以通过路径的方式进行跨模块的调用.
 TODO 文档完善
 
+### 产生映射和Action的列表文档
+build之后, 会自动产生一个doc目录, 下面分模块会生成不同的映射文件列表, 便于研发人员对比
+
 ## 待完成功能(TODO)
 ### WebView和外部浏览器的支持
 ### 多个参数值的支持, MultiValueMap的调研
