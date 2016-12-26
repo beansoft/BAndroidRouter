@@ -152,7 +152,7 @@ public class RouterProcessor extends AbstractProcessor {
                     for(String value : values) {
                         mapMethodBuild.addCode("com.github.beansoftapp.android.router.HRouter.map($S,  $T.class, $L, $S, $L, \"\", \"\");\n",
                                 value, typeElement.asType(), routerActivity.login(), "1.0", routerActivity.isPublic() );
-                        routerMappings.append(value);
+                        routerMappings.append(value).append("\t\t");
                     }
                     routerMappings.append("\n");
                 }
@@ -183,7 +183,7 @@ public class RouterProcessor extends AbstractProcessor {
                     for (String value : values) {
                         mapActionMethodBuild.addCode("com.github.beansoftapp.android.router.HRouter.mapAction($S,  $T.class);\n",
                                 value, typeElement.asType());
-                        actionMappings.append(value);
+                        actionMappings.append(value).append("\t\t");;
                     }
                     actionMappings.append("\n");
                 }
