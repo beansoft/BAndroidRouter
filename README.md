@@ -71,6 +71,7 @@ public class TestAction extends HAbstractAction<String>  {
         });
 ```
 # New! 自动载入映射列表
+多aar动态增减成为可能!!
 每个子module项目中的gradle配置:
 ```gradle
 apt {
