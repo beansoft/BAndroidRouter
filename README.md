@@ -70,7 +70,20 @@ public class TestAction extends HAbstractAction<String>  {
             }
         });
 ```
+# New! 自动载入映射列表
+每个子module项目中的gradle配置:
+```gradle
+apt {
+     arguments {
+             targetModuleName 'Other' // 模块名, 用于加载和生成映射关系
+            assetsDir "$projectDir/src/main/assets"// 可选, 配置时会自动生成assets/modules
+    } 
+}
+```
 
+```java
+HRouter.setupFromAssets(this);
+```
 
 ## 代码结构
 router-demo-app 主演示入口App<br>
@@ -136,6 +149,9 @@ build之后, 会自动产生一个doc目录, 下面分模块会生成不同的�
 ### WebView和外部浏览器的支持
 ### 多个参数值的支持, MultiValueMap的调研
 目前尚在开发之中
+
+## Changelog
+2016-12-27 增加自动载入映射列表的功能
 
 
 #License

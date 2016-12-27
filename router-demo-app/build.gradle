@@ -47,5 +47,6 @@ dependencies {
 apt {
     arguments {
         targetModuleName 'Base'
+        assetsDir "$projectDir/src/main/assets"// 可选, 配置时会自动生成assets/modules
     }
 }

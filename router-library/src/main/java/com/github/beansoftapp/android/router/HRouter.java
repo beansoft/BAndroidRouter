@@ -17,6 +17,7 @@ import com.github.beansoftapp.android.router.interceptor.DefaultLoginInterceptor
 import com.github.beansoftapp.android.router.util.BuildConfig;
 import com.github.beansoftapp.android.router.util.DeviceHelper;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -29,8 +30,8 @@ import static android.content.pm.PackageManager.MATCH_DEFAULT_ONLY;
 /**
  * 初始化:
  * HRouter.setup(new String[]{"Base", "Core"});
- * @see HRouterMappingBase 由APT编译生成的类
- * @see HRouterMappingCore
+ * @link HRouterMappingBase 由APT编译生成的类
+ * @link HRouterMappingCore
  */
 public class HRouter {
     private static final String TAG = "HRouter";
@@ -48,6 +49,29 @@ public class HRouter {
      */
     public static void setLoginInterceptor(AbstractInterceptor loginInterceptor) {
         HRouter.loginInterceptor = loginInterceptor;
+    }
+
+    /**
+     * 自动根据assets下面的模块列表进行载入.
+     * @param context
+     */
+    public static synchronized void setupFromAssets(Context context) {
+        if(context == null) {
+            return;
+        }
+        String fileNames[] = new String[0];//获取assets目录下的所有文件及目录名
+        try {
+            fileNames = context.getAssets().list("modules");
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG, "Can't found assets/modules, setup failed!!!", e);
+        }
+        if (fileNames.length > 0) {//如果是目录
+            String[] strArr = fileNames;
+            setup(strArr);
+        } else {
+            Log.e(TAG, "Can't found any modules, setup failed!!!");
+        }
     }
 
     public static synchronized void setup(String... strArr) {

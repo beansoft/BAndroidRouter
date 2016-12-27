@@ -31,10 +31,11 @@ import javax.tools.Diagnostic;
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({"com.github.beansoftapp.android.router.annotation.Router",
         "com.github.beansoftapp.android.router.annotation.Action"})
-@SupportedOptions({"targetModuleName"})
+@SupportedOptions({"targetModuleName", "assetsDir"})
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class RouterProcessor extends AbstractProcessor {
     private String targetModuleName = "";// 目标模块名
+    private String assetsDir = "";// assets目录
 
     private StringBuilder routerMappings = new StringBuilder();
     private StringBuilder actionMappings = new StringBuilder();
@@ -85,6 +86,21 @@ public class RouterProcessor extends AbstractProcessor {
         if(roundEnv.processingOver()) {
             System.out.println(" ****** actionMappings: " + actionMappings);
             System.out.println(" ****** routerMappings: " + routerMappings);
+
+            // 自动创建文件 assets/modules/$targetModuleName
+            if(assetsDir.length() > 0) {
+                String modulesPath = assetsDir + "/modules";
+                if(!new File(modulesPath).exists()) {
+                    new File(modulesPath).mkdirs();
+                }
+                try {
+                    new File(modulesPath + "/" + targetModuleName).createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
             if(!new File("./doc").exists()) {
                 new File("./doc").mkdir();
             }
@@ -213,6 +229,8 @@ public class RouterProcessor extends AbstractProcessor {
         for (String key : keys) {
             if ("targetModuleName".equals(key)) {
                 this.targetModuleName = map.get(key);
+            } else if("assetsDir".equals(key)) {
+                this.assetsDir = map.get(key);
             }
             System.out.println(key + " = 模块 " + map.get(key));
         }

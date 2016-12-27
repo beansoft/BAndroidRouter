@@ -16,7 +16,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         HRouter.setScheme("app");// 设置跳转的schema
-        HRouter.setup("Base", "Other");
+        HRouter.setupFromAssets(this);// 自动根据assets目录载入
+//        HRouter.setup("Base", "Other"); 手工设置要载入的模块列表
         HRouter.setLoginInterceptor(new DemoLoginInterceptor(getApplicationContext()));
 
         HRouter.action("haction://IMLogoutAction");

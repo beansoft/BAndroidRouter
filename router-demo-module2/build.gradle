@@ -33,6 +33,7 @@ dependencies {
 apt {
     arguments {
         targetModuleName 'Module2' // 模块名, 用于加载和生成映射关系
+        assetsDir "$projectDir/src/main/assets"// 可选, 配置时会自动生成assets/modules
     }
 }
 
