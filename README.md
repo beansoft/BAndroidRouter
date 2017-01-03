@@ -3,11 +3,7 @@ BAndroidRouter is an multi module enabled router library and in-app data transfe
 
 作者: 刘长炯 BeanSoft@126.com (微信号 weblogic ).
 
-借鉴贝贝技术团队微信公众号的一篇文章 "贝贝的组件化之路" , 本代码库
-基于apt技术，通过注解方式实现了AAR组件化和跳转总线(Router), 支持通过URL打开Activity功能,
-支持基于URL的App数据交互协议. 通过避免在最终App类中出现相关注解, 一定程度上保护了代码的安全.
-
-文章详情请自行搜索.
+简介: 把项目拆成一堆小library, 互相之间不用知道Activity名字也能跳转, 也能互相执行操作.
 
 本项目部分代码参考了: https://github.com/joyrun/ActivityRouter 特此鸣谢.
 
