@@ -1,15 +1,23 @@
 # BAndroidRouter
-BAndroidRouter is an multi module enabled router library. 仿贝贝网App组件化及跳转总线库.
+BAndroidRouter is an multi module enabled router library and in-app data transfer framework. 多模块路由总线和数据交换框架.
 
 作者: 刘长炯 BeanSoft@126.com (微信号 weblogic ).
 
 借鉴贝贝技术团队微信公众号的一篇文章 "贝贝的组件化之路" , 本代码库
 基于apt技术，通过注解方式实现了AAR组件化和跳转总线(Router), 支持通过URL打开Activity功能,
-支持基于URL的App数据交互协议. 还能通过避免在最终App类中出现相关注解, 一定程度上保护了代码的安全.
+支持基于URL的App数据交互协议. 通过避免在最终App类中出现相关注解, 一定程度上保护了代码的安全.
 
 文章详情请自行搜索.
 
 本项目部分代码参考了: https://github.com/joyrun/ActivityRouter 特此鸣谢.
+
+# 路由框架的存在意义。  
+
+1. 在一些复杂的业务场景下（比如电商），灵活性比较强，很多功能都是运营人员动态配置的，比如下发一个活动页面，我们事先并不知道具体的目标页面，但如果事先做了约定，提前做好页面映射，便可以自由配置跳转。  
+
+2. 随着业务量的增长，客户端必然随之膨胀，开发人员的工作量越来越大，比如64K问题，比如协作开发问题。App一般都会走向组件化、插件化的道路，而组件化、插件化的前提就是解耦，那么我们首先要做的就是解耦页面之间的依赖关系。
+
+3. 模块化拆分之后面临的另一个问题就是数据交换解耦, 在不同的模块之间解耦之前通过startActivityForResult来实现的数据传输, 以及不同模块间的网络调用互通.
 
 ## 核心用法浓缩
 
@@ -147,6 +155,7 @@ build之后, 会自动产生一个doc目录, 下面分模块会生成不同的�
 便于研发人员查看, 在Android Stuido中点击Rebuild会更新生成.
 
 ## 待完成功能(TODO)
+### startActivityForResult的支持
 ### WebView和外部浏览器的支持
 ### 多个参数值的支持, MultiValueMap的调研
 目前尚在开发之中
@@ -180,5 +189,4 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
 
