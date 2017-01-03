@@ -11,7 +11,7 @@ BAndroidRouter is an multi module enabled router library and in-app data transfe
 
 本项目部分代码参考了: https://github.com/joyrun/ActivityRouter 特此鸣谢.
 
-# 路由框架的存在意义。  
+## 路由框架的意义
 
 1. 在一些复杂的业务场景下（比如电商），灵活性比较强，很多功能都是运营人员动态配置的，比如下发一个活动页面，我们事先并不知道具体的目标页面，但如果事先做了约定，提前做好页面映射，便可以自由配置跳转。  
 
