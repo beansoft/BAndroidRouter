@@ -199,7 +199,7 @@ public class HRouter {
     }
 
     /**
-     * 执行 HAction 动作
+     * 执行异步 HAction 动作
      * @param str
      * @param callback, 带泛型的回调方法
      * @return
@@ -221,7 +221,7 @@ public class HRouter {
     }
 
     /**
-     * 执行 HAction 动作, 使用自定义的参数对象.
+     * 执行同步 HAction 动作, 使用自定义的参数对象.
      * @param str action 路径
      * @param param 对象参数
      * @return
@@ -245,7 +245,7 @@ public class HRouter {
     }
 
     /**
-     * 执行 HAction 动作, 使用自定义的参数对象.
+     * 执行异步 HAction 动作, 使用自定义的参数对象.
      * @param str
      * @param callback, 带泛型的回调方法
      * @return
@@ -269,22 +269,45 @@ public class HRouter {
     /**
      * 跳转到给定路径.
      * @param context
-     * @param str
+     * @param url
      * @return
      */
-    public static boolean open(Context context, String str) {
-        return open(context, Uri.parse(str));
+    public static boolean open(Context context, String url) {
+        return open(context, Uri.parse(url));
+    }
+
+    /**
+     * 跳转到给定路径, 支持 startActivityForResult. !! 不建议H5调用此方法.
+     * @param context
+     * @param url
+     * @param requestCode 如果 >= 0, 会执行 startActivityForResult, 否则执行普通跳转.
+     * @return
+     */
+    public static boolean open(Context context, String url, int requestCode) {
+        return open(context, Uri.parse(url), null, requestCode);
     }
 
     /**
      * 带额外Bundle参数的跳转
      * @param context
-     * @param str
+     * @param url
      * @param bundle
      * @return
      */
-    public static boolean open(Context context, String str, Bundle bundle) {
-        return open(context, Uri.parse(str), bundle);
+    public static boolean open(Context context, String url, Bundle bundle) {
+        return open(context, Uri.parse(url), bundle);
+    }
+
+    /**
+     * 带额外Bundle参数的跳转, 支持 startActivityForResult. !! 不建议H5调用此方法.
+     * @param context
+     * @param url
+     * @param bundle
+     * @param requestCode 如果 >= 0, 会执行 startActivityForResult, 否则执行普通跳转.
+     * @return
+     */
+    public static boolean open(Context context, String url, Bundle bundle, int requestCode) {
+        return open(context, Uri.parse(url), bundle, requestCode);
     }
 
     public static boolean open(Context context, Uri uri) {
@@ -292,6 +315,10 @@ public class HRouter {
     }
 
     public static boolean open(Context context, Uri uri, Bundle bundle) {
+        return open(context, uri, null, -1);
+    }
+
+    public static boolean open(Context context, Uri uri, Bundle bundle, int requestCode) {
         try {
             initMappings();
             HPath create = HPath.create(uri);
@@ -319,8 +346,9 @@ public class HRouter {
                         if(loginInterceptor == null) {
                             interceptor = new DefaultLoginInterceptor(context);
                         }
+                        interceptor.setContext(context);
                         interceptor.setNeedLogin(hMapping.isNeedLogin());
-                        interceptor.openTarget(hMapping.getActivity(), pareseBundle);
+                        interceptor.openTarget(hMapping.getActivity(), pareseBundle, requestCode);
                         return true;
                     }
                     action(hMapping.getPreExecute());

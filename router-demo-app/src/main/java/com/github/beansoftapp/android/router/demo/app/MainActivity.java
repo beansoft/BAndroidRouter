@@ -1,6 +1,7 @@
 package com.github.beansoftapp.android.router.demo.app;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -10,6 +11,7 @@ import com.github.beansoftapp.android.router.action.HAbstractCallback;
 
 
 public class MainActivity extends Activity {
+    private static final int TEST_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +53,17 @@ public class MainActivity extends Activity {
 
     public void testRouterApp(View view) {
         String path = "app://client/my/test?a=b&name=%E5%88%98Sir";
-        if(!HRouter.open(this, path)) {
+        if (!HRouter.open(this, path)) {
+            Toast.makeText(this, "没有跳转成功, 请检查跳转路径 " + path, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "成功跳转到 " + HRouter.getActivityName(path).getCanonicalName(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // 发起 startActivityForResult, 参考类: ActivityWithResult.java
+    public void testStartActivityForResult(View view) {
+        String path = "app://client/my/testReturn";
+        if (!HRouter.open(this, path, TEST_REQUEST_CODE)) {
             Toast.makeText(this, "没有跳转成功, 请检查跳转路径 " + path, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "成功跳转到 " + HRouter.getActivityName(path).getCanonicalName(), Toast.LENGTH_SHORT).show();
@@ -61,10 +73,19 @@ public class MainActivity extends Activity {
     // 跳转到模块1
     public void testRouterModule1(View view) {
         String path = "app://client/module1/test?a=b&name=张三";
-        if(!HRouter.open(this, path)) {
+        if (!HRouter.open(this, path)) {
             Toast.makeText(this, "没有跳转成功, 请检查跳转路径 " + path, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "成功跳转到 " + HRouter.getActivityName(path).getCanonicalName(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        System.out.println("数据回传:" + requestCode);
+        if(requestCode == TEST_REQUEST_CODE && resultCode == Activity.RESULT_OK && null != data){
+            Toast.makeText(this, "数据回传成功: " + data.getStringExtra("data"), Toast.LENGTH_SHORT).show();
         }
     }
 }

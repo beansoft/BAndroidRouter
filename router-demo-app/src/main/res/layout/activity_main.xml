@@ -28,10 +28,21 @@
         android:layout_marginTop="35dp" />
 
     <Button
+        android:text="startActivityForResult"
+        android:onClick="testStartActivityForResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
         android:text="跳转到模块1中的Activity"
         android:onClick="testRouterModule1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+
 </LinearLayout>

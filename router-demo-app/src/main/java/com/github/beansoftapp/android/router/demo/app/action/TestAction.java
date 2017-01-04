@@ -9,7 +9,7 @@ import com.github.beansoftapp.android.router.annotation.Action;
  * 本类也可以直接实现 HAction<String> 接口.
  * Created by beansoft on 16/12/20.
  */
-@Action(value = {"action/test"})
+@Action("action/test")
 public class TestAction extends HAbstractAction<String>  {
     // 同步模式
     public String action() {// 无参数的调用应该只考虑这一个

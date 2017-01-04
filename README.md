@@ -7,6 +7,8 @@ BAndroidRouter is an multi module enabled router library and in-app data transfe
 
 本项目部分代码参考了: https://github.com/joyrun/ActivityRouter 特此鸣谢.
 
+本项目从Gradle插件2.2版本起(需要Java8编译器)不再依赖已经停止更新的第三方android-apt(https://bitbucket.org/hvisser/android-apt)插件, 而采用Google官方的Gradle插件, 简化了代码结构. 如果您需要用Java7打包, 请使用参考分支 apt-version.
+
 ## 路由框架的意义
 
 1. 在一些复杂的业务场景下（比如电商），灵活性比较强，很多功能都是运营人员动态配置的，比如下发一个活动页面，我们事先并不知道具体的目标页面，但如果事先做了约定，提前做好页面映射，便可以自由配置跳转。  
@@ -18,7 +20,7 @@ BAndroidRouter is an multi module enabled router library and in-app data transfe
 ## 核心用法浓缩
 
 ```java
-@Router(value = {"client/module1/test"})
+@Router("client/module1/test")
  // 配置映射路径 
 public class MainActivity extends Activity {
 // ...
@@ -27,22 +29,15 @@ public class MainActivity extends Activity {
 // 使用映射路径跳转
 HRouter.open(context, "app://client/module1/test?a=b&name=张三");
 
+// 使用映射路径发起 startActivityForResult, 参数为requestCode !!!New
+HRouter.open(context, "app://client/module1/test?a=b&name=张三", 1);
+
 // 开发和配置动作映射
-@Action(value = {"action/test"})
+@Action("action/test")
 public class TestAction extends HAbstractAction<String>  {
-        // 同步模式
-        public String action() {// 无参数的调用应该只考虑这一个
+        // 同步模式, 无参数
+        public String action() {
             return "TestAction同步调用无参数";
-        }
-
-        // 同步模式+参数
-        public String action(Object param) {
-            return "TestAction同步调用有参数:" + param;
-        }
-
-        // 异步模式+回调
-        public void action(HCallback<String> callback) {
-            action(null, callback);
         }
 
         // 异步模式+回调+参数
@@ -76,18 +71,13 @@ public class TestAction extends HAbstractAction<String>  {
 ```
 # New! 自动载入映射列表
 多aar动态增减成为可能!!
-每个子module项目中的gradle配置:
+每个子module项目中的gradle配置增加新参数:
 ```gradle
-apt {
-     arguments {
-             targetModuleName 'Other' // 模块名, 用于加载和生成映射关系
-            assetsDir "$projectDir/src/main/assets"// 可选, 配置时会自动生成assets/modules
-    } 
-}
+assetsDir : "$projectDir/src/main/assets".toString() // 可选, 配置时会自动生成assets/modules
 ```
 
 ```java
-HRouter.setupFromAssets(this);
+HRouter.setupFromAssets(this);// 自动载入所有AAR映射关系
 ```
 
 ## 代码结构
@@ -102,28 +92,34 @@ router-library Android库, 实现了Activity的路由逻辑
 参考build.gradle
 
 ```gradle
-apt {
-     arguments {
-             targetModuleName 'Other' // 模块名, 用于加载和生成映射关系
-    } 
-}
+android {     defaultConfig {         javaCompileOptions {             annotationProcessorOptions {                 arguments = [ targetModuleName : 'Base', // 模块名, 用于加载和生成映射关系                               assetsDir : "$projectDir/src/main/assets".toString() // 可选, 配置时会自动生成assets/modules                 ]             }         }     }
 ```
 
 在需要支持跳转的Activity类名上加注解:
 
-
 ```java
-@Router(value = {"client/module1/test"}) 
- public class MainActivity extends Activity {
+@Router("client/module1/test") public class MainActivity extends Activity {
 //...
 }
+```
+
+如果需要登陆后才能跳转到指定UI, 需要三个步骤:
+1) 加入login属性:
+```java
+@Router(value = {"client/module1/test"}, login = true
+)
+```
+2) 需要开发一个登陆状态检测拦截器, 具体请参考代码:DemoLoginInterceptor
+3) 将拦截器和Router相关联.
+```java
+HRouter.setLoginInterceptor(new DemoLoginInterceptor(getApplicationContext()));
 ```
 
 ### 主App的设置
 ####初始化Router
 可以设置跳转支持的Schema, 以及需要加载的模块中的跳转规则类(用APT插件自动生成), 如下面代码中 Other 即为新增模块中的 targetModuleName, 
 ```
-HRouter.setScheme("app");// 设置跳转的schema 
+HRouter.setScheme("app");// 设置跳转的schema
 HRouter.setup("Base", "Other");// 载入映射关系
 ```
 #### 发起路由跳转
@@ -144,14 +140,15 @@ a=b&name=张三 这样的字符串会转换为Bundle信息.
 
 ###跨模块的数据传递
 一个Action可以实现HAction接口, 并加入@Action注解后, 就可以通过路径的方式进行跨模块的调用.
-TODO 文档完善
+####同步模式
+
 
 ### 产生映射和Action的列表文档
 build之后, 会自动产生一个doc目录, 下面分模块会生成不同的映射文件列表,
 便于研发人员查看, 在Android Stuido中点击Rebuild会更新生成.
 
 ## 待完成功能(TODO)
-### startActivityForResult的支持
+### 多拦截器的支持
 ### WebView和外部浏览器的支持
 ### 多个参数值的支持, MultiValueMap的调研
 目前尚在开发之中
@@ -169,6 +166,8 @@ A: 创建一个HAction并增加Action路径, 然后在Action中启动Service,
 
 ## Changelog
 2016-12-27 增加自动载入映射列表的功能
+2017-01-04 增加startActivityForResult
+的功能支持, 去除android-apt第三方插件支持, 简化文档和使用代码
 
 
 #License

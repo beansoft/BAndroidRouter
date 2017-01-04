@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import com.github.beansoftapp.android.router.annotation.Router;
 
-@Router(value = {"user/login"})
+@Router("user/login")
 public class LoginActivity extends Activity {
 
     @Override

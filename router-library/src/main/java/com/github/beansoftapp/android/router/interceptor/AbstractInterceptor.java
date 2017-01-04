@@ -31,12 +31,32 @@ public abstract class AbstractInterceptor implements Interceptor {
         this.context = context;
     }
 
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
     public void openTarget(Class<?> cls, Bundle bundle) {
+        openTarget(cls, bundle, -1);
+    }
+
+    /**
+     * 执行打开目标的动作
+     * @param cls
+     * @param bundle
+     * @param requestCode
+     */
+    public void openTarget(Class<?> cls, Bundle bundle, int requestCode) {
+        openTarget(cls, bundle, getLoginIntent(), requestCode);
+    }
+
+    // 获取登录时应该打开的界面
+    public Intent getLoginIntent() {
         Intent intent = null;
         if (getBridgeClass() != null) {
             intent = new Intent(this.context, getBridgeClass());
         }
-        openTarget(cls, bundle, intent);
+
+        return intent;
     }
 
     /**
@@ -44,21 +64,33 @@ public abstract class AbstractInterceptor implements Interceptor {
      *
      * @param cls
      * @param bundle
-     * @param intent
+     * @param loginIntent
      */
-    public void openTarget(Class<?> cls, Bundle bundle, Intent intent) {
+    public void openTarget(Class<?> cls, Bundle bundle, Intent loginIntent) {
+        openTarget(cls, bundle, loginIntent, -1);
+    }
+
+    /**
+     * 打开目标Activity.
+     *
+     * @param cls
+     * @param bundle
+     * @param loginIntent
+     */
+    public void openTarget(Class<?> cls, Bundle bundle, Intent loginIntent, int requestCode) {
         String name = cls.getName();
         if (TextUtils.isEmpty(name)) {
             throw new RuntimeException("Target Activity is Null, Please Contact Business Ower");
         }
         JumpInvoker jumpInvoker = new JumpInvoker(name, bundle);
-        if (login() || intent == null) {// 登录页面为空时也不能进行跳转
+        if (login() || loginIntent == null) {// 登录页面为空时也不能进行跳转
+            jumpInvoker.setRequestCode(requestCode);
             jumpInvoker.invoke(this.context);
             return;
         }
         Toast.makeText(this.context, "请先登录", Toast.LENGTH_SHORT).show();
-        intent.putExtra(Interceptor.INVOKER, jumpInvoker);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        this.context.startActivity(intent);
+        loginIntent.putExtra(Interceptor.INVOKER, jumpInvoker);
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.context.startActivity(loginIntent);
     }
 }

@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 22
@@ -10,6 +9,14 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [ targetModuleName : 'Base', // 模块名, 用于加载和生成映射关系
+                              assetsDir : "$projectDir/src/main/assets".toString() // 可选, 配置时会自动生成assets/modules
+                ]
+            }
+        }
 
     }
     buildTypes {
@@ -36,17 +43,11 @@ dependencies {
     compile project(':router-library')
 
     provided project(':router-annotation')// 最终项目中不出现Annotation, 增加安全性
-    apt project(':router-compiler') // 项目式依赖
+//    apt project(':router-compiler') // 项目式依赖
+    annotationProcessor project(':router-compiler')
     // 以下方式为导入时的文件式依赖
-//    apt files('./libs/router-compiler.jar')
+//    annotationProcessor files('./libs/router-compiler.jar')
 //    provided files('./libs/router-annotation')
 //    provided 'com.google.auto.service:auto-service:1.0-rc2'
 //    provided 'com.squareup:javapoet:1.7.0'
-}
-
-apt {
-    arguments {
-        targetModuleName 'Base'
-        assetsDir "$projectDir/src/main/assets"// 可选, 配置时会自动生成assets/modules
-    }
 }

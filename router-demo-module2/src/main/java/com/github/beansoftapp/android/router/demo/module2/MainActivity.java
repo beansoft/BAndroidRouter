@@ -7,7 +7,7 @@ import android.widget.TextView;
 import com.github.beansoftapp.android.router.annotation.Router;
 import com.github.beansoftapp.android.router.util.BundleUtil;
 
-@Router(value = {"client/module2/test"})
+@Router("client/module2/test")
 // 配置映射路径
 public class MainActivity extends Activity {
 

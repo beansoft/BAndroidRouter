@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">路由Demo</string>
+    <string name="title_activity_with_result">ActivityWithResult</string>
 </resources>

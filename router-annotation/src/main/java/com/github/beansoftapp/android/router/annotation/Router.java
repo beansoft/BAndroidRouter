@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 /**
  * @Router(value = {"path1", "path2", "a/b/c"})
+ * 或 @Router("path1")
  * 最终生成的代码:
  * HRouterMapping模块名
  *

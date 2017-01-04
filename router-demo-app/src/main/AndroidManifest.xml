@@ -23,7 +23,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".TestActivity" />
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".LoginActivity" />
+        <activity
+            android:name=".ActivityWithResult"
+            android:label="@string/title_activity_with_result"></activity>
     </application>
 
 </manifest>

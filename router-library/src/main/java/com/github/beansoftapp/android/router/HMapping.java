@@ -19,7 +19,7 @@ public class HMapping {
     private boolean isPublic;
     private boolean needLogin;
     private String postExecute;
-    private String preExecute;
+    private String preExecute;// 打开Activity之前需要执行的动作
     private String version;
 
     public HMapping(String str, Class<? extends Activity> cls,
