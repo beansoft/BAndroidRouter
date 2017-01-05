@@ -63,7 +63,7 @@ public class MainActivity extends Activity {
     // 发起 startActivityForResult, 参考类: ActivityWithResult.java
     public void testStartActivityForResult(View view) {
         String path = "app://client/my/testReturn";
-        if (!HRouter.open(this, path, TEST_REQUEST_CODE)) {
+        if (!HRouter.startActivityForResult(this, path, TEST_REQUEST_CODE)) {
             Toast.makeText(this, "没有跳转成功, 请检查跳转路径 " + path, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "成功跳转到 " + HRouter.getActivityName(path).getCanonicalName(), Toast.LENGTH_SHORT).show();

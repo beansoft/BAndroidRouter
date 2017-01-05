@@ -283,7 +283,7 @@ public class HRouter {
      * @param requestCode 如果 >= 0, 会执行 startActivityForResult, 否则执行普通跳转.
      * @return
      */
-    public static boolean open(Context context, String url, int requestCode) {
+    public static boolean startActivityForResult(Context context, String url, int requestCode) {
         return open(context, Uri.parse(url), null, requestCode);
     }
 

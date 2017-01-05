@@ -157,7 +157,11 @@ build之后, 会自动产生一个doc目录, 下面分模块会生成不同的�
 Q: 如何去掉烦人的new Intent(getActivity(), XXXXListActivity.class) 的Activity类名强耦合关系?
 
 A: 修改为 Intent intent = new Intent(getActivity(), HRouter.getActivityName("app://xxxxpath")); 这样即使不用
-EventBus, startActivityForResult(intent, 1); 这样的调用也能轻松拆开了.
+EventBus, 这样的调用也能轻松拆开了.
+
+Q: 如何去掉烦人的 startActivityForResult 的Activity类名强耦合关系?
+
+A: 修改为 HRouter.startActivityForResult(this, "app://xxxxpath"), TEST_REQUEST_CODE);
 
 Q: 如何启动一个Service类?
 
