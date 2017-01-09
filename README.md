@@ -3,7 +3,7 @@ BAndroidRouter is an multi module enabled router library and in-app data transfe
 
 作者: 刘长炯 BeanSoft@126.com (微信号 weblogic ).
 
-简介: 把项目拆成一堆小library, 互相之间不用知道Activity名字也能跳转, 也能互相执行操作.
+简介: 把项目拆成一堆小library, 互相之间不用知道Activity名字也能跳转, 也能进行数据交换.
 
 本项目部分代码参考了: https://github.com/joyrun/ActivityRouter 特此鸣谢.
 
@@ -149,15 +149,15 @@ build之后, 会自动产生一个doc目录, 下面分模块会生成不同的�
 
 ## 待完成功能(TODO)
 ### 多拦截器的支持
-### WebView和外部浏览器的支持
+### WebView互操作和外部浏览器的支持
 ### 多个参数值的支持, MultiValueMap的调研
 目前尚在开发之中
 
 ## 模块化常见问题
-Q: 如何去掉烦人的new Intent(getActivity(), XXXXListActivity.class) 的Activity类名强耦合关系?
+Q: 如何去掉烦人的new Intent(getActivity(), XXXXActivity.class) 的Activity类名强耦合关系?
 
 A: 修改为 Intent intent = new Intent(getActivity(), HRouter.getActivityName("app://xxxxpath")); 这样即使不用
-EventBus, 这样的调用也能轻松拆开了.
+EventBus, 也能轻松解耦了.
 
 Q: 如何去掉烦人的 startActivityForResult 的Activity类名强耦合关系?
 
@@ -167,6 +167,18 @@ Q: 如何启动一个Service类?
 
 A: 创建一个HAction并增加Action路径, 然后在Action中启动Service,
 最后通过 HRouter.action("haction://action/startXXService") 即可完成.
+
+Q: 参数如何传递呢?
+
+A: 通过url中增加get参数, 这些参数会自动转成两种格式:
+	1. 对于跳转协议, 会封装为Bundle参数(目前只支持字符串格式);
+	2. 对于Action执行, 会封装为Map<String,String>参数传递并执行.
+	
+Q: 复杂参数怎么处理? 除了String 还有别的复杂对象.
+A: 这个需要分情况处理:
+	1. 对于跳转协议, 可使用 Router.open(Context context, String url, Bundle bundle), 第三个参数可自行定义Bundle数据;
+	2. 对于Action执行, 可使用 Router.action(String str, Object param) 方法, 第二个参数是自定义的任意对象.
+
 
 ## Changelog
 2016-12-27 增加自动载入映射列表的功能
