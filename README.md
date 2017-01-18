@@ -3,7 +3,7 @@ BAndroidRouter is an multi module enabled router library and in-app data transfe
 
 作者: 刘长炯 BeanSoft@126.com (微信号 weblogic ).
 
-简介: 把项目拆成一堆小library, 互相之间不用知道Activity名字也能跳转, 也能进行数据交换.
+简介: 把项目拆成一堆小library, 互相之间不用知道Activity名字也能跳转, 也能进行数据交换. 目前此项目已用于河狸家安卓App的开发.
 
 本项目部分代码参考了: https://github.com/joyrun/ActivityRouter 特此鸣谢.
 
@@ -30,7 +30,7 @@ public class MainActivity extends Activity {
 HRouter.open(context, "app://client/module1/test?a=b&name=张三");
 
 // 使用映射路径发起 startActivityForResult, 参数为requestCode !!!New
-HRouter.open(context, "app://client/module1/test?a=b&name=张三", 1);
+HRouter.startActivityForResult(context, "app://client/module1/test?a=b&name=张三", 1);
 
 // 开发和配置动作映射
 @Action("action/test")
@@ -149,6 +149,7 @@ build之后, 会自动产生一个doc目录, 下面分模块会生成不同的�
 
 ## 待完成功能(TODO)
 ### 多拦截器的支持
+### 降级方案, Native跳转失败时使用Http代替
 ### WebView互操作和外部浏览器的支持
 ### 多个参数值的支持, MultiValueMap的调研
 目前尚在开发之中
