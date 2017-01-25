@@ -5,7 +5,6 @@ BAndroidRouter is an multi module enabled router library and in-app data transfe
 
 简介: 把项目拆成一堆小library, 互相之间不用知道Activity名字也能跳转, 也能进行数据交换. 目前此项目已用于河狸家安卓App的开发.
 
-本项目部分代码参考了: https://github.com/joyrun/ActivityRouter 特此鸣谢.
 
 本项目从Gradle插件2.2版本起(需要Java8编译器)不再依赖已经停止更新的第三方android-apt(https://bitbucket.org/hvisser/android-apt)插件, 而采用Google官方的Gradle插件, 简化了代码结构. 如果您需要用Java7打包, 请使用参考分支 apt-version.
 
