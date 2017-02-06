@@ -114,6 +114,11 @@ public class HMapping {
         return bundle;
     }
 
+    /**
+     * 解析并复制一份新Bundle, 暂时未用. 旧调用在 HRouter中: pareseBundle = hMapping.pareseBundle(bundle);
+     * @param bundle
+     * @return
+     */
     public Bundle pareseBundle(Bundle bundle) {
         Set<String> keySet = bundle.keySet();
         Bundle bundleCopy = new Bundle();

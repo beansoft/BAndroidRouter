@@ -73,7 +73,9 @@ public class MainActivity extends Activity {
     // 跳转到模块1
     public void testRouterModule1(View view) {
         String path = "app://client/module1/test?a=b&name=张三";
-        if (!HRouter.open(this, path)) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("test_bundle_int", 1234);
+        if (!HRouter.open(this, path, bundle)) {
             Toast.makeText(this, "没有跳转成功, 请检查跳转路径 " + path, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "成功跳转到 " + HRouter.getActivityName(path).getCanonicalName(), Toast.LENGTH_SHORT).show();

@@ -147,6 +147,7 @@ build之后, 会自动产生一个doc目录, 下面分模块会生成不同的�
 便于研发人员查看, 在Android Stuido中点击Rebuild会更新生成.
 
 ## 待完成功能(TODO)
+### 单元测试覆盖
 ### 多拦截器的支持
 ### 降级方案, Native跳转失败时使用Http代替
 ### WebView互操作和外部浏览器的支持
@@ -184,6 +185,7 @@ A: 这个需要分情况处理:
 2016-12-27 增加自动载入映射列表的功能
 2017-01-04 增加startActivityForResult
 的功能支持, 去除android-apt第三方插件支持, 简化文档和使用代码
+2017-02-06 修复 HRouter.open 带自定义bundle丢失的BUG
 
 
 #License

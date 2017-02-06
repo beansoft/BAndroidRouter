@@ -315,7 +315,7 @@ public class HRouter {
     }
 
     public static boolean open(Context context, Uri uri, Bundle bundle) {
-        return open(context, uri, null, -1);
+        return open(context, uri, bundle, -1);
     }
 
     public static boolean open(Context context, Uri uri, Bundle bundle, int requestCode) {
@@ -332,7 +332,8 @@ public class HRouter {
                     Bundle parseExtras = hMapping.parseExtras(create.getUri());
                     parseExtras.putString(TARGET, hMapping.getFormat());
                     if (bundle != null) {
-                        pareseBundle = hMapping.pareseBundle(bundle);
+//                        pareseBundle = hMapping.pareseBundle(bundle);
+                        pareseBundle = bundle;
                         pareseBundle.putAll(parseExtras);
                     } else {
                         pareseBundle = parseExtras;
