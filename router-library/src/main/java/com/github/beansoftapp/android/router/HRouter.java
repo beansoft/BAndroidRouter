@@ -288,6 +288,17 @@ public class HRouter {
     }
 
     /**
+     * 跳转到给定路径, 支持 startActivityForResult, 支持bundle自定义. !! 不建议H5调用此方法.
+     * @param context
+     * @param url
+     * @param requestCode 如果 >= 0, 会执行 startActivityForResult, 否则执行普通跳转.
+     * @return
+     */
+    public static boolean startActivityForResult(Context context, String url, int requestCode, Bundle bundle) {
+        return open(context, Uri.parse(url), bundle, requestCode);
+    }
+
+    /**
      * 带额外Bundle参数的跳转
      * @param context
      * @param url
