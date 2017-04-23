@@ -17,7 +17,7 @@ public class DemoLoginInterceptor extends AbstractInterceptor {
     }
 
     public boolean login() {
-        this.isLogined = isLoginned(context);
+        this.isLogined = isLoginned(realContext);
         if (this.needLogin) {
             return this.isLogined;
         }

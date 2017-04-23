@@ -11,12 +11,12 @@ public class DefaultLoginInterceptor extends AbstractInterceptor {
     private static final String TARGET_LOGIN = "app://client/user/login";
     private boolean isLogined;
 
-    public DefaultLoginInterceptor(Context context) {
+    public DefaultLoginInterceptor(Object context) {
         super(context);
     }
 
     public boolean login() {
-        this.isLogined = isLoginned(context);
+        this.isLogined = isLoginned(realContext);
         if (this.needLogin) {
             return this.isLogined;
         }

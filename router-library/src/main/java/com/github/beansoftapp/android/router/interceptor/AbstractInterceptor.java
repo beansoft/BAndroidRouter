@@ -6,8 +6,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.github.beansoftapp.android.router.util.ContextCast;
+
 public abstract class AbstractInterceptor implements Interceptor {
-    protected Context context;
+    protected Object context;// 支持Fragment
+    protected Context realContext;
     protected boolean needLogin;
 
     /**
@@ -27,12 +30,13 @@ public abstract class AbstractInterceptor implements Interceptor {
         this.needLogin = needLogin;
     }
 
-    public AbstractInterceptor(Context context) {
-        this.context = context;
+    public AbstractInterceptor(Object context) {
+        setContext(context);
     }
 
-    public void setContext(Context context) {
+    public void setContext(Object context) {
         this.context = context;
+        this.realContext = ContextCast.getContext(context);
     }
 
     public void openTarget(Class<?> cls, Bundle bundle) {
@@ -53,7 +57,7 @@ public abstract class AbstractInterceptor implements Interceptor {
     public Intent getLoginIntent() {
         Intent intent = null;
         if (getBridgeClass() != null) {
-            intent = new Intent(this.context, getBridgeClass());
+            intent = new Intent(ContextCast.getContext(this.context), getBridgeClass());
         }
 
         return intent;
@@ -88,9 +92,9 @@ public abstract class AbstractInterceptor implements Interceptor {
             jumpInvoker.invoke(this.context);
             return;
         }
-        Toast.makeText(this.context, "请先登录", Toast.LENGTH_SHORT).show();
+        Toast.makeText(realContext, "请先登录", Toast.LENGTH_SHORT).show();
         loginIntent.putExtra(Interceptor.INVOKER, jumpInvoker);
         loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        this.context.startActivity(loginIntent);
+        this.realContext.startActivity(loginIntent);
     }
 }

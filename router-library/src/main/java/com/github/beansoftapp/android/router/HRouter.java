@@ -1,6 +1,7 @@
 package com.github.beansoftapp.android.router;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -15,6 +16,7 @@ import com.github.beansoftapp.android.router.action.HCallback;
 import com.github.beansoftapp.android.router.interceptor.AbstractInterceptor;
 import com.github.beansoftapp.android.router.interceptor.DefaultLoginInterceptor;
 import com.github.beansoftapp.android.router.util.BuildConfig;
+import com.github.beansoftapp.android.router.util.ContextCast;
 import com.github.beansoftapp.android.router.util.DeviceHelper;
 
 import java.io.IOException;
@@ -212,7 +214,8 @@ public class HRouter {
             for (HActionMapping hActionMapping : actionMappings) {
                 if (hActionMapping.match(create)) {
                     Log.i(TAG, "Hit HAction命中路由表: " + hActionMapping.toString());
-                    HActionExecutor.handleParams(hActionMapping.getAction().newInstance(), hActionMapping.parseExtras(parse), callback );
+                    HActionExecutor.handleParams(hActionMapping.getAction().newInstance(),
+                            hActionMapping.parseExtras(parse), callback );
                 }
             }
         } catch (Exception e) {
@@ -288,6 +291,17 @@ public class HRouter {
     }
 
     /**
+     * 跳转到给定路径, 支持 startActivityForResult. !! 不建议H5调用此方法.
+     * @param fragment Fragment
+     * @param url
+     * @param requestCode 如果 >= 0, 会执行 startActivityForResult, 否则执行普通跳转.
+     * @return
+     */
+    public static boolean startActivityForResult(Fragment fragment, String url, int requestCode) {
+        return openAllowFragment(fragment, Uri.parse(url), null, requestCode);
+    }
+
+    /**
      * 跳转到给定路径, 支持 startActivityForResult, 支持bundle自定义. !! 不建议H5调用此方法.
      * @param context
      * @param url
@@ -296,6 +310,17 @@ public class HRouter {
      */
     public static boolean startActivityForResult(Context context, String url, int requestCode, Bundle bundle) {
         return open(context, Uri.parse(url), bundle, requestCode);
+    }
+
+    /**
+     * 跳转到给定路径, 支持 startActivityForResult, 支持bundle自定义. !! 不建议H5调用此方法.
+     * @param fragment
+     * @param url
+     * @param requestCode 如果 >= 0, 会执行 startActivityForResult, 否则执行普通跳转.
+     * @return
+     */
+    public static boolean startActivityForResult(Fragment fragment, String url, int requestCode, Bundle bundle) {
+        return openAllowFragment(fragment, Uri.parse(url), null, requestCode);
     }
 
     /**
@@ -329,11 +354,21 @@ public class HRouter {
         return open(context, uri, bundle, -1);
     }
 
-    public static boolean open(Context context, Uri uri, Bundle bundle, int requestCode) {
+    /**
+     * 允许传入Fragment和普通Context来执行跳转逻辑.
+     * @param context
+     * @param uri
+     * @param bundle
+     * @param requestCode
+     * @return
+     */
+    public static boolean openAllowFragment(Object context, Uri uri, Bundle bundle, int requestCode) {
         try {
             initMappings();
             HPath create = HPath.create(uri);
-            if (checkOpenApp(context, create)) {
+            Context realContext = ContextCast.getContext(context);
+
+            if (checkOpenApp(realContext, create)) {
                 return true;
             }
             for (HMapping hMapping : mappings) {
@@ -349,7 +384,7 @@ public class HRouter {
                     } else {
                         pareseBundle = parseExtras;
                     }
-                    if (!checkVersion(context, pareseBundle.getString("ver", BuildConfig.VERSION_NAME))) {
+                    if (!checkVersion(realContext, pareseBundle.getString("ver", BuildConfig.VERSION_NAME))) {
                         return true;
                     }
                     if (TextUtils.isEmpty(hMapping.getPreExecute())) {
@@ -372,6 +407,10 @@ public class HRouter {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static boolean open(Context context, Uri uri, Bundle bundle, int requestCode) {
+        return openAllowFragment(context, uri, bundle, requestCode);
     }
 
     /**

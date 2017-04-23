@@ -1,11 +1,13 @@
 package com.github.beansoftapp.android.router.interceptor;
 
-import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.github.beansoftapp.android.router.util.ContextCast;
 
 public class JumpInvoker implements Parcelable, Invoker {
     public static final Creator<JumpInvoker> CREATOR = new Creator<JumpInvoker>() {
@@ -57,21 +59,24 @@ public class JumpInvoker implements Parcelable, Invoker {
         dest.writeInt(this.requestCode);
     }
 
-    public void invoke(Context context) {
+    public void invoke(Object context) {
         try {
-            Intent intent = new Intent(context, Class.forName(this.targetClassName));
+            Context realContext = ContextCast.getContext(context);;
+
+            Intent intent = new Intent(realContext, Class.forName(this.targetClassName));
             intent.putExtras(this.bundle);
 
             if (requestCode >= 0) {
-                if (context instanceof Activity) {
-                    ((Activity) context).startActivityForResult(intent, requestCode);
-                } else {
+                if (context instanceof Fragment) {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
+                    ((Fragment)context).startActivity(intent);
+                } else if (context instanceof Context) {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    realContext.startActivity(intent);
                 }
             } else {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+                realContext.startActivity(intent);
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

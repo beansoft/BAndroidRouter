@@ -1,10 +1,12 @@
 package com.github.beansoftapp.android.router.interceptor;
 
-import android.content.Context;
-
 /**
  * 调用器.
  */
 public interface Invoker {
-    void invoke(Context context);
+    /**
+     * 执行跳转逻辑, context 可以是 Context, Activity或者Fragment
+     * @param context
+     */
+    void invoke(Object context);
 }
