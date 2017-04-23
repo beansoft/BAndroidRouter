@@ -186,6 +186,10 @@ A: 这个需要分情况处理:
 2017-01-04 增加startActivityForResult
 的功能支持, 去除android-apt第三方插件支持, 简化文档和使用代码
 2017-02-06 修复 HRouter.open 带自定义bundle丢失的BUG
+2017-04-23 允许传入Fragment和普通Context来执行跳转逻辑;
+           bug修复:
+           startActivityForResult在Fragment中失效
+           HAction子类中方法反射调用参数错误导致必须声明一个空方法
 
 
 #License
