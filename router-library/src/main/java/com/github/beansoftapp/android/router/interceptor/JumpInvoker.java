@@ -1,5 +1,6 @@
 package com.github.beansoftapp.android.router.interceptor;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -69,10 +70,9 @@ public class JumpInvoker implements Parcelable, Invoker {
             if (requestCode >= 0) {
                 if (context instanceof Fragment) {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    ((Fragment)context).startActivity(intent);
-                } else if (context instanceof Context) {
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    realContext.startActivity(intent);
+                    ((Fragment)context).startActivityForResult(intent, requestCode);
+                } else if (context instanceof Activity) {
+                    ((Activity) context).startActivityForResult(intent, requestCode);
                 }
             } else {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
