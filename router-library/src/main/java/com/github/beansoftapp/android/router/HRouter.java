@@ -320,7 +320,7 @@ public class HRouter {
      * @return
      */
     public static boolean startActivityForResult(Fragment fragment, String url, int requestCode, Bundle bundle) {
-        return openAllowFragment(fragment, Uri.parse(url), null, requestCode);
+        return openAllowFragment(fragment, Uri.parse(url), bundle, requestCode);
     }
 
     /**
