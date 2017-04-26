@@ -69,7 +69,6 @@ public class JumpInvoker implements Parcelable, Invoker {
 
             if (requestCode >= 0) {
                 if (context instanceof Fragment) {
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     ((Fragment)context).startActivityForResult(intent, requestCode);
                 } else if (context instanceof Activity) {
                     ((Activity) context).startActivityForResult(intent, requestCode);
