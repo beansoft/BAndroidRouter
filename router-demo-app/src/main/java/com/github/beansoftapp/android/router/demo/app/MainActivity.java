@@ -17,6 +17,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        HRouter.setEnableDebugLog(false);
         HRouter.setScheme("app");// 设置跳转的schema
         HRouter.setupFromAssets(this);// 自动根据assets目录载入
 //        HRouter.setup("Base", "Other"); 手工设置要载入的模块列表

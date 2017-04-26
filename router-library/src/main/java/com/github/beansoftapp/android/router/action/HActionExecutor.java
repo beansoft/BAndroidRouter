@@ -1,6 +1,6 @@
 package com.github.beansoftapp.android.router.action;
 
-import android.util.Log;
+import com.github.beansoftapp.android.router.util.LogUtil;
 
 import java.lang.reflect.Method;
 
@@ -77,7 +77,7 @@ public class HActionExecutor {
                         return action.action(params);
                     }
                 } catch (NoSuchMethodException e) {
-                    Log.i(TAG, "Hit 命中HAction.action()方法 ");
+                    LogUtil.i(TAG, "Hit 命中HAction.action()方法 ");
                     return action.action();
                 }
             } else {// 异步调用, 有回调
@@ -90,7 +90,7 @@ public class HActionExecutor {
                         action.action(params, callback);
                     }
                 } catch (NoSuchMethodException e) {
-                    Log.i(TAG, "Hit 命中HAction.action(HCallback callback)方法 ");
+                    LogUtil.i(TAG, "Hit 命中HAction.action(HCallback callback)方法 ");
                     action.action(callback);
                 }
             }

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.github.beansoftapp.android.router.action.HAbstractAction;
 import com.github.beansoftapp.android.router.action.HAction;
@@ -19,6 +18,7 @@ import com.github.beansoftapp.android.router.interceptor.DefaultLoginInterceptor
 import com.github.beansoftapp.android.router.util.BuildConfig;
 import com.github.beansoftapp.android.router.util.ContextCast;
 import com.github.beansoftapp.android.router.util.DeviceHelper;
+import com.github.beansoftapp.android.router.util.LogUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,14 +66,13 @@ public class HRouter {
         try {
             fileNames = context.getAssets().list("modules");
         } catch (IOException e) {
-            e.printStackTrace();
-            Log.e(TAG, "Can't found assets/modules, setup failed!!!", e);
+            LogUtil.e(TAG, "Can't found assets/modules, setup failed!!!", e);
         }
         if (fileNames.length > 0) {//如果是目录
             String[] strArr = fileNames;
             setup(strArr);
         } else {
-            Log.e(TAG, "Can't found any modules, setup failed!!!");
+            LogUtil.e(TAG, "Can't found any modules, setup failed!!!");
         }
     }
 
@@ -122,10 +121,10 @@ public class HRouter {
                     Class.forName("com.github.beansoftapp.android.router.HRouterMapping" + str).getMethod("mapAction", new Class[0]).invoke(null, new Object[0]);
                 } catch (Throwable e) {
                     e.printStackTrace();
-                    Log.e(TAG, "Cannt fond com.github.beansoftapp.android.router.HRouterMapping" + str, e);
+                    LogUtil.e(TAG, "Cannt fond com.github.beansoftapp.android.router.HRouterMapping" + str, e);
                 }
             }
-            Log.d(TAG, "Routers HAction cost " + (System.currentTimeMillis() - currentTimeMillis) + "ms");
+            LogUtil.d(TAG, "Routers HAction cost " + (System.currentTimeMillis() - currentTimeMillis) + "ms");
         }
     }
 
@@ -137,10 +136,10 @@ public class HRouter {
                     Class.forName("com.github.beansoftapp.android.router.HRouterMapping" + str).getMethod("map", new Class[0]).invoke(null, new Object[0]);
                 } catch (Throwable e) {
                     e.printStackTrace();
-                    Log.e(TAG, "Cannt fond com.github.beansoftapp.android.router.HRouterMapping" + str, e);
+                    LogUtil.e(TAG, "Cannt fond com.github.beansoftapp.android.router.HRouterMapping" + str, e);
                 }
             }
-            Log.d(TAG, "Routers cost " + (System.currentTimeMillis() - currentTimeMillis) + "ms");
+            LogUtil.d(TAG, "Routers cost " + (System.currentTimeMillis() - currentTimeMillis) + "ms");
         }
     }
 
@@ -190,7 +189,7 @@ public class HRouter {
             HPath create = HPath.create(parse);
             for (HActionMapping hActionMapping : actionMappings) {
                 if (hActionMapping.match(create)) {
-                    Log.i(TAG, "Hit HAction命中路由表: " + hActionMapping.toString());
+                    LogUtil.i(TAG, "Hit HAction命中路由表: " + hActionMapping.toString());
                     HAction action = hActionMapping.getAction().newInstance();
                     if(action instanceof HAbstractAction) {
                         ((HAbstractAction)action).router_target = hActionMapping.getFormat();
@@ -218,7 +217,7 @@ public class HRouter {
             HPath create = HPath.create(parse);
             for (HActionMapping hActionMapping : actionMappings) {
                 if (hActionMapping.match(create)) {
-                    Log.i(TAG, "Hit HAction命中路由表: " + hActionMapping.toString());
+                    LogUtil.i(TAG, "Hit HAction命中路由表: " + hActionMapping.toString());
                     HAction action = hActionMapping.getAction().newInstance();
                     if(action instanceof HAbstractAction) {
                         ((HAbstractAction)action).router_target = hActionMapping.getFormat();
@@ -245,7 +244,7 @@ public class HRouter {
             HPath create = HPath.create(parse);
             for (HActionMapping hActionMapping : actionMappings) {
                 if (hActionMapping.match(create)) {
-                    Log.i(TAG, "Hit HAction命中路由表: " + hActionMapping.toString());
+                    LogUtil.i(TAG, "Hit HAction命中路由表: " + hActionMapping.toString());
                     HAction action = hActionMapping.getAction().newInstance();
                     if(action instanceof HAbstractAction) {
                         ((HAbstractAction)action).router_target = hActionMapping.getFormat();
@@ -273,7 +272,7 @@ public class HRouter {
             HPath create = HPath.create(parse);
             for (HActionMapping hActionMapping : actionMappings) {
                 if (hActionMapping.match(create)) {
-                    Log.i(TAG, "Hit HAction命中路由表: " + hActionMapping.toString());
+                    LogUtil.i(TAG, "Hit HAction命中路由表: " + hActionMapping.toString());
                     HAction action = hActionMapping.getAction().newInstance();
                     if(action instanceof HAbstractAction) {
                         ((HAbstractAction)action).router_target = hActionMapping.getFormat();
@@ -391,7 +390,7 @@ public class HRouter {
             for (HMapping hMapping : mappings) {
                 if (hMapping.match(create)) {
                     Bundle pareseBundle;
-                    Log.i(TAG, "Hit 命中路由表: " + hMapping.toString());
+                    LogUtil.i(TAG, "Hit 命中路由表: " + hMapping.toString());
                     Bundle parseExtras = hMapping.parseExtras(create.getUri());
                     parseExtras.putString(TARGET, hMapping.getFormat());
                     if (bundle != null) {
@@ -507,5 +506,13 @@ public class HRouter {
             return obj + BuildConfig.VERSION_NAME;
         }
         return defaultValue;
+    }
+
+    /**
+     * Enable or disable debug log, default is off.
+     * @param enableLog
+     */
+    public static void setEnableDebugLog(boolean enableLog) {
+        LogUtil.setLogEnabled(enableLog);
     }
 }
