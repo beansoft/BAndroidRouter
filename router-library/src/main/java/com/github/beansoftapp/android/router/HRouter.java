@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.github.beansoftapp.android.router.action.HAbstractAction;
 import com.github.beansoftapp.android.router.action.HAction;
 import com.github.beansoftapp.android.router.action.HActionExecutor;
 import com.github.beansoftapp.android.router.action.HActionMapping;
@@ -190,7 +191,11 @@ public class HRouter {
             for (HActionMapping hActionMapping : actionMappings) {
                 if (hActionMapping.match(create)) {
                     Log.i(TAG, "Hit HAction命中路由表: " + hActionMapping.toString());
-                    return HActionExecutor.handleParams(hActionMapping.getAction().newInstance(), hActionMapping.parseExtras(parse), null );
+                    HAction action = hActionMapping.getAction().newInstance();
+                    if(action instanceof HAbstractAction) {
+                        ((HAbstractAction)action).router_target = hActionMapping.getFormat();
+                    }
+                    return HActionExecutor.handleParams(action, hActionMapping.parseExtras(parse), null );
                 }
             }
             return null;
@@ -214,7 +219,11 @@ public class HRouter {
             for (HActionMapping hActionMapping : actionMappings) {
                 if (hActionMapping.match(create)) {
                     Log.i(TAG, "Hit HAction命中路由表: " + hActionMapping.toString());
-                    HActionExecutor.handleParams(hActionMapping.getAction().newInstance(),
+                    HAction action = hActionMapping.getAction().newInstance();
+                    if(action instanceof HAbstractAction) {
+                        ((HAbstractAction)action).router_target = hActionMapping.getFormat();
+                    }
+                    HActionExecutor.handleParams(action,
                             hActionMapping.parseExtras(parse), callback );
                 }
             }
@@ -237,7 +246,11 @@ public class HRouter {
             for (HActionMapping hActionMapping : actionMappings) {
                 if (hActionMapping.match(create)) {
                     Log.i(TAG, "Hit HAction命中路由表: " + hActionMapping.toString());
-                    return HActionExecutor.handleParams(hActionMapping.getAction().newInstance(), param, null );
+                    HAction action = hActionMapping.getAction().newInstance();
+                    if(action instanceof HAbstractAction) {
+                        ((HAbstractAction)action).router_target = hActionMapping.getFormat();
+                    }
+                    return HActionExecutor.handleParams(action, param, null );
                 }
             }
             return null;
@@ -261,7 +274,11 @@ public class HRouter {
             for (HActionMapping hActionMapping : actionMappings) {
                 if (hActionMapping.match(create)) {
                     Log.i(TAG, "Hit HAction命中路由表: " + hActionMapping.toString());
-                    HActionExecutor.handleParams(hActionMapping.getAction().newInstance(), param, callback );
+                    HAction action = hActionMapping.getAction().newInstance();
+                    if(action instanceof HAbstractAction) {
+                        ((HAbstractAction)action).router_target = hActionMapping.getFormat();
+                    }
+                    HActionExecutor.handleParams(action, param, callback );
                 }
             }
         } catch (Exception e) {

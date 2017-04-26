@@ -13,12 +13,13 @@ import com.github.beansoftapp.android.router.annotation.Action;
 public class TestAction extends HAbstractAction<String>  {
     // 同步模式
     public String action() {// 无参数的调用应该只考虑这一个
-        return "TestAction同步调用无参数";
+        return "TestAction同步调用无参数, router_target=" + router_target;
     }
 
     // 同步模式+参数
     public String action(Object param) {
-        return "TestAction同步调用有参数:" + param;
+        return "TestAction同步调用有参数:" + param
+                + " router_target=" + router_target;
     }
 
     // 异步模式+回调

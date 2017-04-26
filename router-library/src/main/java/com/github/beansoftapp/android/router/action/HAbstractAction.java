@@ -13,6 +13,7 @@ package com.github.beansoftapp.android.router.action;
  * @param <T> 参数返回结果
  */
 public abstract class HAbstractAction<T> implements HAction<T> {
+    public String router_target;// 和Activity的跳转保持一致, 增加来源路径参数
 
     public T action() {
         return null;
