@@ -164,6 +164,10 @@ Q: 如何去掉烦人的 startActivityForResult 的Activity类名强耦合关系
 
 A: 修改为 HRouter.startActivityForResult(this, "app://xxxxpath"), TEST_REQUEST_CODE);
 
+Q: startActivityForResult 支持Fragment吗?
+
+A: 最新版已经支持传入Fragment进行跳转了.
+
 Q: 如何启动一个Service类?
 
 A: 创建一个HAction并增加Action路径, 然后在Action中启动Service,
@@ -182,6 +186,7 @@ A: 这个需要分情况处理:
 
 
 ## Changelog
+2016-04-27 允许传入Fragment和普通Context来执行跳转逻辑和startActivityForResult; 增加调试日志开关;
 2016-12-27 增加自动载入映射列表的功能
 2017-01-04 增加startActivityForResult
 的功能支持, 去除android-apt第三方插件支持, 简化文档和使用代码
