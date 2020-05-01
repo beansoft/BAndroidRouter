@@ -2,18 +2,33 @@
 
 buildscript {
     repositories {
-        jcenter()
+        mavenLocal()
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven{ url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
+        google()
     }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.1'
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'com.android.tools.build:gradle:3.5.2'
     }
+
 }
 
 allprojects {
     repositories {
+        mavenLocal()
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven{ url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
+        google()
         jcenter()
+        maven { url('http://maven.aliyun.com/nexus/content/groups/public/') }
+        //jcenter() 使用国内镜像加速jcenter
+        maven { url('http://maven.aliyun.com/nexus/content/repositories/gradle-plugin/') }
+        maven { url('https://oss.sonatype.org/content/repositories/releases/') }
+        maven { url('https://maven.aliyun.com/repository/central/') }
+        maven { url 'https://github.com/500px/500px-android-blur/raw/master/releases/' }
+        maven { url "https://jitpack.io" }
+        maven { url 'http://developer.huawei.com/repo' }
     }
 }
 

@@ -1,12 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion '25.0.0'
+    compileSdkVersion 29
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 22
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
@@ -25,10 +24,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     repositories {
         mavenCentral()
@@ -38,11 +38,11 @@ dependencies {
     }
 
 //    compile (name: 'router-demo-module1-debug', ext: 'aar')// 此代码从主libs下面获取module编译生成的aar
-    compile project(':router-demo-module1')
-    compile project(':router-demo-module2')
-    compile project(':router-library')
+    implementation project(':router-demo-module1')
+    implementation project(':router-demo-module2')
+    implementation project(':router-library')
 
-    provided project(':router-annotation')// 最终项目中不出现Annotation, 增加安全性
+    compileOnly project(':router-annotation')// 最终项目中不出现Annotation, 增加安全性
 //    apt project(':router-compiler') // 项目式依赖
     annotationProcessor project(':router-compiler')
     // 以下方式为导入时的文件式依赖
