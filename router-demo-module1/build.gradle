@@ -50,9 +50,10 @@ android.libraryVariants.all { variant ->
                 print "=======> " + name + "\n"
 //                output.outputFile = outputFile// 保留旧的library文件
 //                output.outputFile = file(name)
-                print outputFile.getClass()
-                print outputFile.getPath()
-//                output.outputFileName = name
+//                print outputFile.getClass() java.io.File
+                print  "path=" + outputFile.getPath()
+//                output.outputFileName = name // 只能改名字
+//                output.outputFile = file(name)
             }
 
         }
